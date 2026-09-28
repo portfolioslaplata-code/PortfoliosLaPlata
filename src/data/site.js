@@ -19,10 +19,10 @@ export const site = {
     title: "Tu carrera merece",
     emphasis: "más que un PDF.",
     description:
-      "Tu experiencia, proyectos y formación en un portfolio web profesional. Un lugar propio para mostrar lo que hacés y compartirlo con un solo link.",
+      "Creamos portfolios web profesionales para reunir tu experiencia, formación y proyectos en un lugar propio. Para mostrar lo que hacés y compartirlo con un solo link.",
     primaryCta: "Quiero mi portfolio",
-    secondaryCta: "Explorar los ejemplos",
-    note: "Vos ponés tu recorrido. Nosotros lo hacemos web.",
+    secondaryCta: "Ver ejemplos",
+    note: "Para estudiantes, freelancers y profesionales. Estés donde estés.",
     previewLabel: "Tu próximo paso, en primera pantalla.",
     previewNote: "Modelos reales. Tu identidad.",
     previewEyebrow: "01 — TU ESPACIO PROFESIONAL",
@@ -61,59 +61,53 @@ export const site = {
     ending: "Y también la tuya.",
   },
   showcase: {
-    eyebrow: "MENOS IMAGINAR. MÁS VER.",
-    title: "Así puede verse\ntu próximo portfolio.",
+    eyebrow: "CONOCÉ NUESTROS PORTFOLIOS",
+    title: "Elegí qué querés contar.\nMirá cómo puede verse.",
     description:
-      "Explorá las demos y encontrá un punto de partida para tu perfil. Después, lo hacemos tuyo.",
+      "Una presentación clara o un recorrido con más profundidad. Explorá los productos y sus modelos antes de elegir el tuyo.",
     note: "Son demos de producto: los perfiles y contenidos ilustran cada modelo.",
-    modelNote:
-      "Dos estilos, un mismo plan. Los modelos de Esencial incluyen el mismo servicio; elegís la base visual que mejor va con vos.",
-    featuredLabel: "UNA HISTORIA CON MÁS PROFUNDIDAD",
-    featuredNote:
-      "Más espacio para explicar tus proyectos, mostrar resultados y darle contexto a tu recorrido.",
-    demoCta: "Ver demo",
-    featuredCta: "Ver demo Profesional",
+    demoCta: "Ver portfolio",
+    priceCta: "Ver qué incluye",
+    singularModelLabel: "{count} modelo disponible",
+    pluralModelLabel: "{count} modelos disponibles",
   },
   portfolioExamples: [
     {
       id: "esencial-01",
       productId: "esencial",
-      model: "Modelo 01",
-      title: "Una mirada creativa.",
+      model: "Editorial",
       description:
-        "Cálido, expresivo y editorial. Para darle protagonismo a tu trabajo y tu personalidad.",
+        "Cálido, expresivo y visual. Una base para perfiles creativos que quieren darle protagonismo a su trabajo y su personalidad.",
       url: "https://esencial-sigma.vercel.app/",
       image: "/images/demos/esencial-01.webp",
       alt: "Captura de la demo Esencial 01, portfolio creativo de diseño y comunicación",
       tags: ["Editorial", "Cálido", "Visual"],
-      tone: "peach",
+      tone: "warm",
       hero: true,
     },
     {
       id: "esencial-02",
       productId: "esencial",
-      model: "Modelo 02",
-      title: "Claridad que se nota.",
+      model: "Minimal",
       description:
-        "Sobrio, simple y ordenado. Tu información profesional, con el espacio que necesita.",
+        "Sobrio, simple y estructurado. Para quienes buscan una presentación profesional más neutral y ordenada.",
       url: "https://esencial-2.vercel.app/",
       image: "/images/demos/esencial-02.webp",
       alt: "Captura de la demo Esencial 02, portfolio de estilo sobrio y estructurado",
       tags: ["Minimalista", "Sobrio", "Estructurado"],
-      tone: "blue",
+      tone: "neutral",
     },
     {
       id: "profesional-01",
       productId: "profesional",
-      model: "Modelo 01",
-      title: "Tu recorrido, en detalle.",
+      model: "Profesional",
       description:
-        "Una presentación con más profundidad: proyectos con contexto, logros y una identidad visual más personal.",
+        "Conocé una presentación que reúne proyectos con contexto, trayectoria y logros. Una base con más libertad para desarrollar tu perfil.",
       url: "https://profesional-virid.vercel.app/",
       image: "/images/demos/profesional-01.webp",
       alt: "Captura de la demo Profesional 01, presentación profesional con proyectos desarrollados",
-      tags: ["Más contenido", "Más personalización"],
-      tone: "sage",
+      tags: ["Proyectos con contexto", "Trayectoria y logros"],
+      tone: "neutral",
       featured: true,
     },
   ],
@@ -137,7 +131,7 @@ export const site = {
       price: 220000,
       currency: "ARS",
       badge: "",
-      tagline: "Tu primer lugar propio.",
+      tagline: "Todo lo que necesitás para presentarte profesionalmente.",
       description:
         "Quiero una presencia profesional clara, moderna y lista para compartir.",
       features: [
@@ -150,14 +144,23 @@ export const site = {
         "Una ronda de ajustes",
       ],
       cta: "Consultar por Esencial",
+      showcase: {
+        layout: "models",
+        eyebrow: "UNA PRESENTACIÓN CLARA, A TU MEDIDA",
+        headline: "Elegí una base. Nosotros la hacemos tuya.",
+        description:
+          "Son opciones de diseño del mismo producto: adaptamos el contenido, las imágenes y los colores a tu perfil. El alcance del servicio es el mismo, elijas el modelo que elijas.",
+        modelNote: "Distintos estilos. Un mismo producto.",
+        demoCta: "Ver portfolio",
+      },
       comparison: {
         design: "Modelo a elección + tu identidad",
         content: "Presentación y trabajos",
         responsive: "Incluido",
-        cv: "A consultar",
-        domain: "A consultar",
+        cv: "No incluido",
+        domain: "No incluido",
         seo: "Básico",
-        analytics: "A consultar",
+        analytics: "No incluida",
         revisions: "1 ronda",
         special: "No incluido",
       },
@@ -170,7 +173,7 @@ export const site = {
       currency: "ARS",
       badge: "Más posibilidades",
       featured: true,
-      tagline: "Más espacio para tu experiencia.",
+      tagline: "Más espacio para demostrar lo que sabés hacer.",
       description:
         "Quiero mostrar mi trabajo y recorrido con mayor profundidad.",
       features: [
@@ -183,6 +186,20 @@ export const site = {
         "Hasta dos rondas de ajustes",
       ],
       cta: "Consultar por Profesional",
+      showcase: {
+        layout: "expanded",
+        eyebrow: "TU RECORRIDO, CON MÁS PROFUNDIDAD",
+        description:
+          "Un producto con mayor adaptación visual y de estructura. Desarrollamos tus proyectos como casos de trabajo y les damos contexto a tu experiencia y tus logros.",
+        demoCta: "Ver portfolio profesional",
+        highlights: [
+          "Proyectos como casos de trabajo",
+          "CV descargable",
+          "SEO optimizado",
+          "Medición de visitas",
+          "Mayor personalización",
+        ],
+      },
       comparison: {
         design: "Mayor personalización",
         content: "Proyectos con contexto y logros",
@@ -202,7 +219,7 @@ export const site = {
       price: null,
       currency: "ARS",
       badge: "",
-      tagline: "Una idea que pide algo distinto.",
+      tagline: "Una experiencia diseñada desde cero para vos.",
       description: "Necesito una experiencia diseñada alrededor de mi perfil.",
       features: [
         "Diseño desde cero, a medida",
@@ -253,27 +270,27 @@ export const site = {
   },
   process: [
     {
-      title: "Encontramos tu portfolio",
+      title: "Nos contás sobre vos",
       description:
         "Conversamos sobre tu perfil y elegimos la propuesta que tiene sentido para vos.",
     },
     {
-      title: "Reunimos tu información",
+      title: "Reunimos tu contenido",
       description:
         "Nos compartís tu CV, fotos, trabajos, proyectos y los links que quieras incluir.",
     },
     {
-      title: "Lo hacemos tuyo",
+      title: "Diseñamos tu portfolio",
       description:
         "Damos forma a tu contenido y adaptamos el diseño a tu identidad profesional.",
     },
     {
-      title: "Revisamos juntos",
+      title: "Lo revisamos juntos",
       description:
         "Ves el resultado y afinamos los detalles con las rondas de ajustes de tu plan.",
     },
     {
-      title: "Listo para compartir",
+      title: "Publicamos",
       description:
         "Publicamos tu portfolio. Tu próximo contacto puede empezar con un solo link.",
     },

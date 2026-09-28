@@ -11,7 +11,7 @@ export function CTA({ site }) {
         <p className="final-cta-description">{site.finalCta.description}</p>
       </div>
       <div className="final-cta-actions">
-        <ContactButton site={site} light>
+        <ContactButton site={site}>
           {site.finalCta.cta}
         </ContactButton>
         <p>{site.finalCta.note}</p>

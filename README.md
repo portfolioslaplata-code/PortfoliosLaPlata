@@ -28,10 +28,11 @@ Las pruebas de navegador usan Chrome instalado, en modo headless, y levantan su 
 ```text
 src/
   data/site.js                Todo el contenido y la configuración comercial
+  data/theme.js               Paleta central de la marca
   components/
     Navbar.jsx                Navegación de escritorio y menú móvil
     Hero.jsx                  Hero, propuesta y profesiones
-    PortfolioShowcase.jsx     Galería generada a partir de las demos
+    PortfolioShowcase.jsx     Grupos de producto con sus modelos y precio
     Products.jsx              Tarjetas y comparativa responsive
     Process.jsx               Proceso de contratación
     Benefits.jsx              Beneficios
@@ -41,13 +42,13 @@ src/
   lib/
     site.js                   Contacto, filtros, precios y respuestas compartidas
     seo.js                    Metadatos HTML y Schema.org
+    theme.js                  Variables CSS y favicon derivados de la paleta
     analytics.js              Integración opcional de GA4
   App.jsx                     Composición de las secciones
   main.jsx                    Inicio/hidratación de React
   entry-server.jsx            Render estático durante el build
-  styles.css                  Tokens de identidad y estilos responsive
+  styles.css                  Tokens Tailwind y estilos responsive
 public/
-  favicon.svg
   images/demos/*.webp         Capturas reales guardadas localmente
 scripts/
   prerender.mjs               HTML estático, robots y sitemap condicional
@@ -69,7 +70,7 @@ currency: 'ARS',
 badge: 'Precio lanzamiento',
 ```
 
-`price: null` muestra el texto de `pricing.customPrice`. El formato argentino y Schema.org toman el valor del mismo objeto. `badge: ''` oculta la etiqueta. `featured: true` da el tratamiento verde destacado.
+`price: null` muestra el texto de `pricing.customPrice`. Ejemplos, Planes y Schema.org toman el precio del mismo objeto. `badge: ''` oculta la etiqueta. `featured: true` destaca la tarjeta de precios con un borde cobalto y CTA principal, manteniendo su fondo neutro.
 
 Para agregar un producto, duplicar un objeto completo de `products` y darle un `id` único. Editar nombre, precio, descripción, beneficios, CTA y los valores de `comparison`. La grilla y las columnas se adaptan a los productos activos; no requiere copiar componentes. Los textos editoriales (por ejemplo, “Tres propuestas”) también pueden ajustarse en `pricing` si cambia la cantidad de planes.
 
@@ -87,20 +88,41 @@ Agregar un objeto a **`portfolioExamples`** con:
 {
   id: 'esencial-03',
   productId: 'esencial', // Debe coincidir con un producto activo
-  model: 'Modelo 03',
-  title: 'Otra forma de presentarte.',
+  model: 'Contemporáneo', // Nombre comercial visible
   description: 'Descripción del modelo.',
   url: 'https://tu-demo-publicada.example/',
   image: '/images/demos/esencial-03.webp',
   alt: 'Descripción concreta de la captura',
   tags: ['Editorial', 'Minimalista'],
-  tone: 'sage', // peach, blue o sage
+  tone: 'neutral', // neutral o warm
   featured: false,
   hero: false,
 }
 ```
 
-La demo con `hero: true` aparece primero en la portada. La segunda se toma de una demo destacada o de la siguiente disponible. No hay índices fijos: si se quita una demo o su producto, se elige otra. `featured: true` permite una tarjeta ancha. `productId` conecta la demo con el nombre vigente del producto.
+La demo con `hero: true` aparece primero en la portada. La segunda se toma de una demo con `featured: true` o de la siguiente disponible. No hay índices fijos: si se quita una demo o su producto, se elige otra.
+
+**Nombres visibles de modelos:** editar `portfolioExamples[].model`. Los nombres iniciales son **Editorial**, **Minimal** y **Profesional**. Se conservaron los IDs internos `esencial-01`, `esencial-02` y `profesional-01`; no es necesario renombrar imágenes o enlaces al cambiar un nombre comercial. La antigua propiedad `title` fue reemplazada en las tarjetas por `model` para evitar dos nombres competidores.
+
+**Agrupación por producto:** `productId` conecta cada demo con `products[].id`. `getShowcaseGroups` agrupa automáticamente todos sus modelos y respeta el orden de `products`. Agregar Esencial 03 o Profesional 02 solo requiere sumar su objeto a `portfolioExamples`. Los grupos sin demos o de productos desactivados no se muestran; Personalizado continúa en Planes y no tiene una demo ficticia.
+
+Cada producto puede definir `showcase`:
+
+```js
+showcase: {
+  layout: 'models', // 'expanded' para una presentación más amplia
+  eyebrow: 'UNA PRESENTACIÓN CLARA, A TU MEDIDA',
+  headline: 'Elegí una base. Nosotros la hacemos tuya.',
+  description: 'Explicación del alcance y los modelos de este producto.',
+  modelNote: 'Distintos estilos. Un mismo producto.',
+  demoCta: 'Ver portfolio',
+  highlights: [], // Beneficios breves para el diseño expanded
+}
+```
+
+`headline` usa `product.tagline` si no se define. Los demás textos tienen fallbacks al producto o a `site.showcase`. Los contadores de modelos son dinámicos. El nombre del grupo y el precio se leen directamente del producto: no duplicarlos dentro de `showcase`.
+
+Esencial usa `layout: 'models'`: introducción compartida y modelos Editorial y Minimal juntos. Profesional usa `layout: 'expanded'`: bloque independiente con mayor separación, fondo neutro diferenciado, captura completa e indicadores de alcance. Esta separación se mantiene también en móvil y se aplica a todos los modelos futuros de ese producto.
 
 Las imágenes actuales **son capturas reales**, no placeholders, de:
 
@@ -146,20 +168,22 @@ No se envía ningún mensaje automáticamente. Los botones abren el canal de con
 
 ## Identidad visual
 
-Editar el bloque **`@theme` en `src/styles.css`**:
+Editar **`src/data/theme.js`**, la única fuente de colores de la landing:
 
-```css
---color-primary: #244a3b;
---color-secondary: #e9eee5;
---color-accent: #d7e8a4;
---color-background: #faf9f6;
---color-surface: #ffffff;
---color-text: #222d26;
---color-muted: #62685f;
---color-border: #dcded5;
+```js
+primary: '#3157e8',
+secondary: '#eeede9',
+accent: '#e6ebff',
+background: '#f7f7f4',
+surface: '#ffffff',
+text: '#171717',
+muted: '#666661',
+border: '#dddcd7',
 ```
 
-Los estilos usan esos tokens; las tonalidades específicas de las previews están en `.tone-peach`, `.tone-blue` y `.tone-sage`. Para un cambio completo de marca, revisar también el favicon `public/favicon.svg`, el color del navegador en `src/lib/seo.js` y los estados hover/contraste del CSS.
+El archivo también contiene hover, texto sobre cobalto, fondos de previews y sombras. `src/lib/theme.js` genera las variables de la página y el favicon SVG embebido a partir de esa paleta; `src/lib/seo.js` reutiliza el color principal para el navegador. El favicon estático anterior fue sustituido por esta versión generada. `src/styles.css` expone los tokens mediante `@theme static` y los utiliza en todos los estilos. Reiniciar Vite o reconstruir después de cambiar la paleta.
+
+La identidad usa una base mayormente neutra, con cobalto en CTAs, enlaces, etiquetas, números y contornos destacados. Se conservaron Manrope y DM Sans, las formas principales y el orden de secciones. Los colores que aparecen dentro de las capturas pertenecen a cada demo, no a la marca de la landing.
 
 Tipografías: **Manrope** para titulares y **DM Sans** para texto. Se sirven localmente desde paquetes Fontsource, sin llamadas a Google Fonts y con `font-display: swap`. Los tokens `--font-display` y `--font-sans` controlan la asignación. Las licencias OFL están en los paquetes correspondientes.
 
@@ -201,4 +225,4 @@ Se requieren **ambas** condiciones; IDs inválidos tampoco cargan scripts. El ID
 - `npm run test:browser`: 320, 375, 430, 768, 1024 y 1440 px; overflow con comparativa abierta; menú por teclado/Escape; FAQ; enlaces y capturas locales; tracking desactivado; HTML sin JavaScript. Incluye axe WCAG A/AA en móvil y escritorio. Una auditoría automática no reemplaza una revisión humana de accesibilidad.
 - Capturas de revisión generadas en `test-results/`, excluidas de control de versiones.
 
-La carpeta se recibió vacía, sin `AGENTS.md` aplicable ni repositorio Git. No se modificaron los proyectos de `Productos` ni se publicó la landing en un servicio externo.
+La landing tiene su repositorio independiente. Para esta iteración se siguieron, por indicación del usuario, `../Productos/AGENTS.md` y las decisiones compartidas de `../Productos/producto-docs/`. No se modificaron los modelos de producto. La comparativa de Esencial ahora indica explícitamente que CV, dominio propio y Analytics no forman parte de la oferta estándar, según `catalogo.md`.

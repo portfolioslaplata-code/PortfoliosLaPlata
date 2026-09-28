@@ -1,4 +1,6 @@
 import { getProducts } from "./site.js";
+import { theme } from "../data/theme.js";
+import { renderThemeHead } from "./theme.js";
 
 const escape = (value) =>
   String(value).replace(
@@ -66,7 +68,8 @@ export function renderSeo(site) {
   return [
     `<title>${escape(seo.title)}</title>`,
     `<meta name="description" content="${escape(seo.description)}">`,
-    `<meta name="theme-color" content="#244a3b">`,
+    `<meta name="theme-color" content="${theme.primary}">`,
+    renderThemeHead(),
     `<meta property="og:type" content="website">`,
     `<meta property="og:site_name" content="${escape(site.brand.name)}">`,
     `<meta property="og:locale" content="${escape(seo.locale)}">`,

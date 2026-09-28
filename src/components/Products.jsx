@@ -38,7 +38,6 @@ export function ProductCard({ product, site }) {
       <ContactButton
         site={site}
         product={product}
-        light={product.featured}
         className={product.featured ? "" : "button-outline"}
       >
         {product.cta}

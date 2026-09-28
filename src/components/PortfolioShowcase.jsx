@@ -1,41 +1,51 @@
+import { Check, ArrowUpRight } from "lucide-react";
 import { DemoFrame, DemoLink, SectionHeading } from "./ui";
-import { getExamples, getProducts } from "../lib/site";
+import { getShowcaseGroups, priceLabel } from "../lib/site";
 
-export function PortfolioCard({ example, product, site }) {
+export function PortfolioCard({ example, product, site, expanded = false }) {
   return (
     <article
-      className={`portfolio-card ${example.featured ? "portfolio-featured" : ""}`}
+      className={`portfolio-card ${expanded ? "portfolio-featured" : ""}`}
     >
-      <div className={`portfolio-preview tone-${example.tone || "sage"}`}>
+      <div className={`portfolio-preview tone-${example.tone || "neutral"}`}>
         <a
           href={example.url}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={`Ver ${product.name} ${example.model}, abre una pestaña nueva`}
+          aria-label={`Ver ${product.name} — ${example.model}, abre una pestaña nueva`}
         >
           <DemoFrame example={example} />
         </a>
       </div>
       <div className="portfolio-info">
-        {example.featured && (
-          <p className="eyebrow">{site.showcase.featuredLabel}</p>
+        {example.model !== product.name && (
+          <p className="portfolio-meta">{product.name}</p>
         )}
-        <div className="portfolio-meta">
-          <span>{product.name}</span>
-          <span>{example.model}</span>
-        </div>
-        <h3>{example.title}</h3>
+        <h4>{example.model}</h4>
         <p>{example.description}</p>
-        <div className="portfolio-card-bottom">
-          <div className="tags">
-            {example.tags.map((tag) => (
-              <span key={tag}>{tag}</span>
+        {expanded && product.showcase?.highlights?.length > 0 && (
+          <ul className="portfolio-highlights">
+            {product.showcase.highlights.map((highlight) => (
+              <li key={highlight}>
+                <Check size={15} aria-hidden="true" />
+                {highlight}
+              </li>
             ))}
-          </div>
-          <DemoLink example={example}>
-            {example.featured
-              ? site.showcase.featuredCta
-              : site.showcase.demoCta}
+          </ul>
+        )}
+        <div className="portfolio-card-bottom">
+          {!expanded && (
+            <div className="tags">
+              {example.tags?.map((tag) => (
+                <span key={tag}>{tag}</span>
+              ))}
+            </div>
+          )}
+          <DemoLink
+            example={example}
+            className={expanded ? "button button-primary" : ""}
+          >
+            {product.showcase?.demoCta || site.showcase.demoCta}
           </DemoLink>
         </div>
       </div>
@@ -44,8 +54,7 @@ export function PortfolioCard({ example, product, site }) {
 }
 
 export default function PortfolioShowcase({ site }) {
-  const examples = getExamples(site);
-  const products = getProducts(site);
+  const groups = getShowcaseGroups(site);
   return (
     <section id="ejemplos" className="showcase section-space">
       <div className="container">
@@ -53,20 +62,78 @@ export default function PortfolioShowcase({ site }) {
           <SectionHeading {...site.showcase} />
           <p className="side-note">{site.showcase.note}</p>
         </div>
-        <div className="portfolio-grid">
-          {examples.map((example) => (
-            <PortfolioCard
-              key={example.id}
-              example={example}
-              product={products.find(
-                (product) => product.id === example.productId,
-              )}
-              site={site}
-            />
-          ))}
+        <div className="showcase-groups">
+          {groups.map(({ product, models }, index) => {
+            const config = product.showcase || {};
+            const expanded = config.layout === "expanded";
+            const modelLabel =
+              models.length === 1
+                ? site.showcase.singularModelLabel
+                : site.showcase.pluralModelLabel;
+            return (
+              <section
+                key={product.id}
+                className={`showcase-group ${expanded ? "showcase-group-expanded" : ""}`}
+                aria-labelledby={`showcase-${product.id}`}
+                data-product={product.id}
+              >
+                <div className="showcase-group-heading">
+                  <div className="showcase-product-title">
+                    <span className="showcase-number" aria-hidden="true">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <div>
+                      {config.eyebrow && (
+                        <p className="eyebrow">{config.eyebrow}</p>
+                      )}
+                      <h3 id={`showcase-${product.id}`}>{product.name}</h3>
+                    </div>
+                  </div>
+                  <a href="#planes" className="showcase-price">
+                    <span>
+                      {product.price != null ? (
+                        <>
+                          {site.pricing.startingAt}{" "}
+                          <strong>{priceLabel(product)}</strong>{" "}
+                          {product.currency}
+                        </>
+                      ) : (
+                        site.pricing.customPrice
+                      )}
+                    </span>
+                    <span>
+                      {site.showcase.priceCta}
+                      <ArrowUpRight size={14} aria-hidden="true" />
+                    </span>
+                  </a>
+                </div>
+                <div className="showcase-group-intro">
+                  <p className="showcase-headline">
+                    {config.headline || product.tagline}
+                  </p>
+                  <p>{config.description || product.description}</p>
+                </div>
+                <div className="showcase-model-label">
+                  <span>{modelLabel.replace("{count}", models.length)}</span>
+                  {config.modelNote && <span>{config.modelNote}</span>}
+                </div>
+                <div
+                  className={`portfolio-grid ${expanded ? "portfolio-grid-expanded" : ""}`}
+                >
+                  {models.map((example) => (
+                    <PortfolioCard
+                      key={example.id}
+                      example={example}
+                      product={product}
+                      site={site}
+                      expanded={expanded}
+                    />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
         </div>
-        {examples.filter((example) => example.productId === "esencial").length >
-          1 && <p className="showcase-model-note">{site.showcase.modelNote}</p>}
       </div>
     </section>
   );

@@ -12,6 +12,21 @@ for (const width of [320, 375, 430, 768, 1024, 1440]) {
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await expect(page.locator(".product-card")).toHaveCount(3);
     await expect(page.locator(".portfolio-card")).toHaveCount(3);
+    const essential = page.locator('[data-product="esencial"]');
+    const professional = page.locator('[data-product="profesional"]');
+    await expect(essential.locator(".portfolio-card")).toHaveCount(2);
+    await expect(essential.getByRole("heading", { level: 4 })).toHaveText([
+      "Editorial",
+      "Minimal",
+    ]);
+    await expect(essential.locator(".showcase-price")).toContainText("220.000");
+    await expect(professional.locator(".showcase-price")).toContainText(
+      "350.000",
+    );
+    await expect(professional.locator(".portfolio-highlights")).toContainText(
+      "CV descargable",
+    );
+    await expect(professional).toHaveClass(/showcase-group-expanded/);
     await expect(page.locator(".product-price").nth(0)).toContainText(
       "220.000",
     );
@@ -37,7 +52,7 @@ for (const width of [320, 375, 430, 768, 1024, 1440]) {
       "",
     );
     expect(errors).toEqual([]);
-    if (width === 375 || width === 1440) {
+    if ([375, 768, 1440].includes(width)) {
       const results = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
         .analyze();
@@ -53,6 +68,27 @@ for (const width of [320, 375, 430, 768, 1024, 1440]) {
       }
       await page.evaluate(() => window.scrollTo(0, 0));
       await page.screenshot({ path: `test-results/hero-${width}.png` });
+      // Hide fixed/sticky chrome only in section captures to avoid screenshot stitching artifacts.
+      const sectionCapture = {
+        style: ".site-header, .skip-link { visibility: hidden !important; }",
+      };
+      await page
+        .locator("#ejemplos")
+        .screenshot({
+          ...sectionCapture,
+          path: `test-results/examples-${width}.png`,
+        });
+      await professional.screenshot({
+        ...sectionCapture,
+        path: `test-results/professional-${width}.png`,
+      });
+      await page
+        .locator("#planes")
+        .screenshot({
+          ...sectionCapture,
+          path: `test-results/pricing-${width}.png`,
+        });
+      await page.evaluate(() => window.scrollTo(0, 0));
       await page.screenshot({
         path: `test-results/landing-${width}.png`,
         fullPage: true,

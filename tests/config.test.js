@@ -8,6 +8,7 @@ import {
   contactHref,
   getProducts,
   getExamples,
+  getShowcaseGroups,
   instagramHref,
   faqAnswer,
 } from "../src/lib/site.js";
@@ -92,7 +93,7 @@ test("agregar una demo y un producto solo requiere configuración", () => {
     ...config.portfolioExamples[0],
     id: "nuevo-01",
     productId: "nuevo",
-    title: "Nueva demo de prueba",
+    model: "Nueva demo de prueba",
     hero: false,
   });
   const html = renderApp(config);
@@ -102,6 +103,43 @@ test("agregar una demo y un producto solo requiere configuración", () => {
   assert.ok(html.includes("Lanzamiento"));
   assert.ok(html.includes("123.456"));
   assert.ok(renderSeo(config).includes("123456"));
+});
+
+test("los modelos se agrupan por producto y comparten el precio vigente", () => {
+  const config = structuredClone(site);
+  config.products[0].name = "Presentación";
+  config.products[0].price = 234567;
+  config.portfolioExamples.push(
+    {
+      ...config.portfolioExamples[0],
+      id: "esencial-03",
+      model: "Nuevo modelo",
+      hero: false,
+    },
+    {
+      ...config.portfolioExamples[2],
+      id: "profesional-02",
+      model: "Otra mirada",
+    },
+  );
+  config.portfolioExamples.reverse();
+  const groups = getShowcaseGroups(config);
+  assert.deepEqual(
+    groups.map(({ product, models }) => [product.name, models.length]),
+    [
+      ["Presentación", 3],
+      ["Profesional", 2],
+    ],
+  );
+  const html = renderApp(config);
+  assert.equal((html.match(/234\.567/g) || []).length, 2);
+  assert.ok(html.includes("3 modelos disponibles"));
+  assert.ok(html.includes("Otra mirada"));
+  config.products[0].enabled = false;
+  assert.deepEqual(
+    getShowcaseGroups(config).map(({ product }) => product.id),
+    ["profesional"],
+  );
 });
 
 test("pago, canonical e imagen social provienen de configuración", () => {

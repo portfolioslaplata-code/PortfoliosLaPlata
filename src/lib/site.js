@@ -19,6 +19,16 @@ export function contactHref(contact, productName) {
   return `mailto:${contact.email}?subject=${encodeURIComponent(contact.emailSubject)}&body=${encodeURIComponent(message)}`;
 }
 
+export function getShowcaseGroups(site) {
+  const examples = getExamples(site);
+  return getProducts(site)
+    .map((product) => ({
+      product,
+      models: examples.filter((example) => example.productId === product.id),
+    }))
+    .filter((group) => group.models.length > 0);
+}
+
 export function instagramHref(value) {
   if (!value) return null;
   try {
