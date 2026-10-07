@@ -1,4 +1,3 @@
-import { getProducts } from "./site.js";
 import { theme } from "../data/theme.js";
 import { renderThemeHead } from "./theme.js";
 import { routes, normalizePath } from "../data/routes.js";
@@ -59,17 +58,18 @@ export function renderSeo(site, pathname = "/") {
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: "Portfolios profesionales",
-      itemListElement: getProducts(site).map((product) => ({
+      itemListElement: [site.pricingModel.base, ...Object.values(site.pricingModel.sectionTypes), site.pricingModel.custom].map((item) => ({
         "@type": "Offer",
-        name: product.name,
-        description: product.description,
-        itemOffered: { "@type": "Service", name: product.name },
-        ...(product.price != null
+        name: item.name,
+        description: item.description,
+        itemOffered: { "@type": "Service", name: item.name },
+        ...(item.price != null
           ? {
               priceSpecification: {
-                "@type": "PriceSpecification",
-                minPrice: product.price,
-                priceCurrency: product.currency,
+                "@type": "UnitPriceSpecification",
+                minPrice: item.price,
+                priceCurrency: site.pricingModel.currency,
+                referenceQuantity: { "@type": "QuantitativeValue", value: 1, unitText: item === site.pricingModel.base ? item.name : "sección" },
               },
             }
           : {}),

@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { ArrowDown, ArrowRight } from "lucide-react";
-import { sectionCategories, sectionsPage as copy } from "../data/sections";
+import { sectionsPage as copy } from "../data/sections";
 import { homeSection } from "../data/routes";
-import { getProducts, planValue } from "../lib/site";
+import { getCatalog, startingPrice } from "../lib/site";
 import SectionCategory from "../components/sections/SectionCategory";
 import CustomSectionsCTA from "../components/sections/CustomSectionsCTA";
 
@@ -16,7 +16,7 @@ export default function SectionsPage({ site }) {
           <p className="catalog-intro">{copy.description}</p>
           <p className="catalog-definition">{copy.definition}</p>
           <nav className="catalog-jumps" aria-label="Tipos de secciones">
-            {Object.entries(site.sectionTypes).filter(([id]) => ["standard", "advanced", "custom"].includes(id)).map(([id, type]) => (
+            {Object.entries({ ...site.pricingModel.sectionTypes, custom: site.pricingModel.custom }).map(([id, type]) => (
               <Link key={id} to={`/secciones#${id}`}>{type.label}<ArrowDown size={14} aria-hidden="true" /></Link>
             ))}
           </nav>
@@ -29,15 +29,20 @@ export default function SectionsPage({ site }) {
           <p>{copy.anatomy.note}</p>
         </div>
       </section>
-      <section className="catalog-plans container" aria-labelledby="catalog-plans-title">
-        <div className="catalog-plans-heading"><h2 id="catalog-plans-title">{copy.planIntro}</h2><Link className="text-link" to={homeSection("planes")}>{copy.plansLink}<ArrowRight size={16} aria-hidden="true" /></Link></div>
-        <div className="catalog-plan-grid">
-          {getProducts(site).map((plan) => <div key={plan.id}><h3>{plan.name}</h3><p>{planValue(plan, "sections", site)}</p><span>{planValue(plan, "sectionTypes", site)}</span></div>)}
+      <section className="catalog-formula container" aria-labelledby="catalog-formula-title">
+        <h2 id="catalog-formula-title">{site.pricing.formula.title}</h2>
+        <div className="portfolio-formula">
+          <div><strong>{site.pricingModel.base.name}</strong><span>{startingPrice(site, site.pricingModel.base)}</span></div>
+          <span className="formula-symbol" aria-label="más">+</span>
+          <div><strong>{site.pricing.formula.sections}</strong><span>{Object.values(site.pricingModel.sectionTypes).map((type) => type.label).join(" / ")}</span></div>
+          <span className="formula-symbol" aria-label="igual a">=</span>
+          <strong className="formula-result">{site.pricing.formula.result}</strong>
         </div>
         <p className="catalog-count-note">{site.pricing.contentNote}</p>
+        <Link className="text-link" to={homeSection("precios")}>{site.pricing.formula.linkLabel}<ArrowRight size={16} aria-hidden="true" /></Link>
       </section>
       <p className="catalog-preview-note container">{copy.previewNote}</p>
-      {sectionCategories.map((category) => <SectionCategory key={category.id} category={category} site={site} />)}
+      {getCatalog(site).map((category) => <SectionCategory key={category.id} category={category} site={site} />)}
       <CustomSectionsCTA site={site} />
     </>
   );

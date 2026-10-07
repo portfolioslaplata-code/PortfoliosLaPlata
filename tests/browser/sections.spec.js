@@ -16,16 +16,22 @@ for (const width of [320, 375, 430, 768, 900, 1024, 1440]) {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Elegí qué querés mostrar.");
     await expect(page.locator("#standard .section-card")).toHaveCount(10);
     await expect(page.locator("#advanced .section-card")).toHaveCount(8);
+    await expect(page.locator("#standard .catalog-category-price")).toContainText("30.000");
+    await expect(page.locator("#advanced .catalog-category-price")).toContainText("65.000");
+    await expect(page.locator(".catalog-formula")).toContainText("130.000");
+    await expect(page.locator("#custom")).toContainText("Cotización personalizada");
+    await expect(page.locator("body")).not.toContainText(/\b(?:Planes|Esencial|Esenciales|Profesional|Personalizado)\b/);
+    await expect(page.locator(".section-availability")).toHaveCount(0);
     await expect(page.locator('.section-preview[aria-hidden="true"]')).toHaveCount(18);
     await expect(page.getByRole("link", { name: "Contanos tu idea", exact: true })).toHaveAttribute("href", /^mailto:/);
     await expect(page.getByRole("link", { name: "Volver al inicio", exact: true })).toHaveAttribute("href", "/#inicio");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    await expect(page.locator(".catalog-count-note")).toContainText("no cuentan dentro del límite");
+    await expect(page.locator(".catalog-count-note")).toContainText("No se cobran como secciones independientes");
     await page.getByRole("navigation", { name: "Tipos de secciones" }).getByRole("link", { name: "Avanzadas" }).click();
     await expectAtSection(page, "advanced");
-    await page.getByRole("navigation", { name: "Navegación al pie" }).getByRole("link", { name: "Planes", exact: true }).click();
-    await expect(page).toHaveURL(/\/#planes$/);
-    await expectAtSection(page, "planes");
+    await page.getByRole("navigation", { name: "Navegación al pie" }).getByRole("link", { name: "Precios", exact: true }).click();
+    await expect(page).toHaveURL(/\/#precios$/);
+    await expectAtSection(page, "precios");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await page.goto("/secciones");
     if ([320, 768, 1440].includes(width)) {
@@ -33,13 +39,15 @@ for (const width of [320, 375, 430, 768, 900, 1024, 1440]) {
       expect(audit.violations).toEqual([]);
       await page.screenshot({ path: `test-results/sections-${width}.png`, fullPage: true });
       await page.locator(".catalog-hero").screenshot({ path: `test-results/sections-hero-${width}.png` });
+      await page.locator(".catalog-formula").screenshot({ path: `test-results/sections-formula-${width}.png` });
+      await page.locator("#standard .catalog-category-heading").screenshot({ path: `test-results/sections-price-${width}.png` });
       await page.locator("#advanced .section-card").first().screenshot({ path: `test-results/sections-preview-${width}.png` });
     }
     expect(errors).toEqual([]);
   });
 }
 
-test("rutas y hashes: Navbar, Planes, scroll repetido e historial", async ({ page }) => {
+test("rutas y hashes: Navbar, Precios, scroll repetido e historial", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   // A persistent marker ensures navigation stays client-side.
@@ -50,7 +58,7 @@ test("rutas y hashes: Navbar, Planes, scroll repetido e historial", async ({ pag
   await expect(page).toHaveTitle("Secciones para tu portfolio | Portfolios La Plata");
   await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
   await expect(nav.getByRole("link", { name: "Secciones", exact: true })).toHaveAttribute("aria-current", "page");
-  for (const [label, id] of [["Planes", "planes"], ["Ejemplos", "ejemplos"], ["Cómo funciona", "proceso"], ["Preguntas", "preguntas"]]) {
+  for (const [label, id] of [["Precios", "precios"], ["Ejemplos", "ejemplos"], ["Cómo funciona", "proceso"], ["Preguntas", "preguntas"]]) {
     await nav.getByRole("link", { name: label, exact: true }).click();
     await expect(page).toHaveURL(new RegExp(`/#${id}$`));
     await expectAtSection(page, id);
@@ -58,19 +66,19 @@ test("rutas y hashes: Navbar, Planes, scroll repetido e historial", async ({ pag
     await nav.getByRole("link", { name: "Secciones", exact: true }).click();
     await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
   }
-  await nav.getByRole("link", { name: "Planes", exact: true }).click();
-  await expectAtSection(page, "planes");
+  await nav.getByRole("link", { name: "Precios", exact: true }).click();
+  await expectAtSection(page, "precios");
   await page.evaluate(() => scrollTo({ top: 0, behavior: "instant" }));
-  await nav.getByRole("link", { name: "Planes", exact: true }).click();
-  await expectAtSection(page, "planes");
-  const explore = page.locator(".product-card").nth(1).getByRole("link", { name: "Explorar secciones" });
+  await nav.getByRole("link", { name: "Precios", exact: true }).click();
+  await expectAtSection(page, "precios");
+  const explore = page.getByRole("link", { name: "Ver secciones avanzadas", exact: true });
   await explore.scrollIntoViewIfNeeded();
   const previousScroll = await page.evaluate(() => scrollY);
   await explore.click();
   await expect(page).toHaveURL(/\/secciones#advanced$/);
   await expectAtSection(page, "advanced");
   await page.goBack();
-  await expect(page).toHaveURL(/\/#planes$/);
+  await expect(page).toHaveURL(/\/#precios$/);
   await expect.poll(() => page.evaluate(() => scrollY)).toBeCloseTo(previousScroll, 0);
   await page.goForward();
   await expectAtSection(page, "advanced");
@@ -91,10 +99,10 @@ test("menú móvil entre rutas: teclado, Escape y cierre al navegar", async ({ p
   await page.keyboard.press("Escape");
   await expect(toggle).toBeFocused();
   await toggle.click();
-  await nav.getByRole("link", { name: "Planes", exact: true }).click();
+  await nav.getByRole("link", { name: "Precios", exact: true }).click();
   await expect(nav).toBeHidden();
-  await expectAtSection(page, "planes");
-  await page.locator(".product-card").first().getByRole("link", { name: "Explorar secciones" }).click();
+  await expectAtSection(page, "precios");
+  await page.getByRole("link", { name: "Ver secciones estándar", exact: true }).click();
   await expectAtSection(page, "standard");
 });
 
@@ -103,8 +111,8 @@ test("carga directa, refresh con hash y HTML de /secciones sin JavaScript", asyn
   await expectAtSection(page, "advanced");
   await page.reload();
   await expectAtSection(page, "advanced");
-  await page.goto("/#planes");
-  await expectAtSection(page, "planes");
+  await page.goto("/#precios");
+  await expectAtSection(page, "precios");
   const context = await browser.newContext({ javaScriptEnabled: false });
   const staticPage = await context.newPage();
   await staticPage.goto("/secciones");

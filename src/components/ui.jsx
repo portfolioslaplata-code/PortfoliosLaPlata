@@ -23,14 +23,13 @@ export function Brand({ site }) {
 
 export function ContactButton({
   site,
-  product,
   children,
   className = "",
   light = false,
 }) {
   return (
     <a
-      href={contactHref(site.contact, product?.name)}
+      href={contactHref(site.contact)}
       className={`button ${light ? "button-light" : "button-primary"} ${className}`}
     >
       {children || site.hero.primaryCta}
@@ -65,7 +64,7 @@ export function DemoFrame({ example, eager = false, className = "" }) {
           <i />
           <i />
         </span>
-        <span>{new URL(example.url).hostname}</span>
+        <span>{example.name}</span>
         <ArrowUpRight size={11} />
       </div>
       <img
@@ -87,7 +86,7 @@ export function DemoLink({ example, children, className = "" }) {
       target="_blank"
       rel="noopener noreferrer"
       className={`text-link ${className}`}
-      aria-label={`${children}, ${example.model} — se abre en una pestaña nueva`}
+      aria-label={`${children}, ${example.name} — se abre en una pestaña nueva`}
     >
       {children}
       <ArrowUpRight size={18} aria-hidden="true" />

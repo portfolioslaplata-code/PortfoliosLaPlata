@@ -1,7 +1,6 @@
 /* The catalog uses the landing's palette, typography and spacing tokens. */
 .desktop-navigation a[aria-current="page"],
 .mobile-navigation a[aria-current="page"] { color: var(--color-primary); text-decoration: underline; text-underline-offset: 6px; }
-.product-section-scope .text-link { margin-top: 5px; font-size: .82rem; }
 .catalog-hero { display: grid; grid-template-columns: 1.35fr 1fr; align-items: center; gap: 80px; padding-block: 72px 58px; }
 .catalog-hero h1 { max-width: 620px; font-size: clamp(2.5rem, 4.2vw, 3.7rem); }
 .catalog-intro { margin-top: 24px; color: var(--color-muted); font-size: 1.05rem; max-width: 590px; }
@@ -19,14 +18,6 @@
 .anatomy-content strong { font-size: .9rem; font-weight: 500; }
 .anatomy-content i { height: 5px; width: 40px; margin-left: auto; border-radius: 2px; background: var(--color-accent); }
 .portfolio-anatomy > p { font-size: .75rem; color: var(--color-muted); margin-top: 18px; }
-.catalog-plans { border-block: 1px solid var(--color-border); padding-block: 28px; }
-.catalog-plans-heading { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 22px; }
-.catalog-plans-heading h2 { font-size: 1.3rem; letter-spacing: -.035em; }
-.catalog-plan-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px; }
-.catalog-plan-grid > div + div { border-left: 1px solid var(--color-border); padding-left: 26px; }
-.catalog-plan-grid h3 { color: var(--color-primary); font-size: .95rem; margin-bottom: 8px; }
-.catalog-plan-grid p { font-size: .92rem; }
-.catalog-plan-grid span { display: block; font-size: .82rem; color: var(--color-muted); margin-top: 4px; }
 .catalog-count-note { margin-top: 24px; color: var(--color-muted); font-size: .82rem; max-width: 900px; }
 .catalog-preview-note { margin-top: 28px; color: var(--color-muted); font-size: .8rem; }
 .catalog-category-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 34px; }
@@ -42,8 +33,6 @@
 .section-card-copy > p { font-size: .88rem; line-height: 1.65; color: var(--color-muted); }
 .section-card-copy .section-ideal { margin-block: 13px 22px; font-size: .79rem; }
 .section-ideal strong { font-weight: 500; color: var(--color-text); }
-.section-card-copy .section-availability { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--color-border); font-size: .73rem; }
-.section-availability strong { font-weight: 500; color: var(--color-primary); }
 .category-advanced { background: var(--color-secondary); border-block: 1px solid var(--color-border); }
 .category-advanced .sections-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .category-advanced .section-card-copy { padding: 26px; }
@@ -163,8 +152,6 @@
   .catalog-hero { grid-template-columns: 1fr; gap: 32px; padding-top: 48px; }
   .portfolio-anatomy { max-width: 460px; width: 100%; margin-inline: auto; transform: none; }
   .catalog-category-heading { align-items: start; flex-direction: column; }
-  .catalog-plan-grid { gap: 18px; }
-  .catalog-plan-grid > div + div { padding-left: 18px; }
   .custom-sections { grid-template-columns: 1fr; }
   .category-advanced .sections-grid { grid-template-columns: 1fr; }
   .category-advanced .section-preview { padding-inline: max(24px, 12%); }
@@ -174,9 +161,6 @@
   .portfolio-anatomy { display: none; }
   .catalog-hero h1 { font-size: 2.6rem; }
   .catalog-intro { font-size: 1rem; }
-  .catalog-plans-heading { align-items: start; flex-direction: column; gap: 7px; }
-  .catalog-plan-grid { grid-template-columns: 1fr; }
-  .catalog-plan-grid > div + div { padding: 17px 0 0; border-left: 0; border-top: 1px solid var(--color-border); }
   .sections-grid { grid-template-columns: 1fr; gap: 20px; }
   .section-preview { height: 205px; padding-inline: 24px; }
   .section-card-copy, .category-advanced .section-card-copy { padding: 22px; }

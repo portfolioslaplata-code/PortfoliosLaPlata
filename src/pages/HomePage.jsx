@@ -1,6 +1,6 @@
 import Hero, { Introduction, Audience } from "../components/Hero";
 import PortfolioShowcase from "../components/PortfolioShowcase";
-import Products from "../components/Products";
+import Pricing from "../components/Pricing";
 import Process from "../components/Process";
 import Benefits from "../components/Benefits";
 import FAQ from "../components/FAQ";
@@ -13,7 +13,7 @@ export default function HomePage({ site }) {
       <Introduction site={site} />
       <PortfolioShowcase site={site} />
       <Audience site={site} />
-      <Products site={site} />
+      <Pricing site={site} />
       <Process site={site} />
       <Benefits site={site} />
       <FAQ site={site} />

@@ -1,15 +1,15 @@
 import { ContactButton } from "../ui";
-import { sectionsPage } from "../../data/sections";
 
 export default function CustomSectionsCTA({ site }) {
-  const copy = sectionsPage.custom;
+  const copy = site.pricingModel.custom;
   return (
     <section id="custom" className="custom-sections container section-space" aria-labelledby="custom-title">
       <div>
-        <p className="eyebrow">{copy.eyebrow}</p>
+        <p className="eyebrow">{copy.name}</p>
         <h2 id="custom-title">{copy.title}</h2>
         <p className="section-description">{copy.description}</p>
-        <ContactButton site={site} product={site.products.find((product) => product.id === "personalizado")}>{copy.cta}</ContactButton>
+        <p className="custom-quote">{site.pricingModel.customQuote}</p>
+        <ContactButton site={site}>{copy.cta}</ContactButton>
       </div>
       <div className="custom-possibilities">
         <ul>{copy.examples.map((example) => <li key={example}>{example}</li>)}</ul>
