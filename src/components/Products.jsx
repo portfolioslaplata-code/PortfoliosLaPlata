@@ -1,6 +1,6 @@
 import { Check, ChevronDown } from "lucide-react";
-import { ContactButton, SectionHeading } from "./ui";
-import { getProducts, priceLabel } from "../lib/site";
+import { ContactButton, MoreLink, SectionHeading } from "./ui";
+import { getProducts, planValue, priceLabel } from "../lib/site";
 
 export function ProductCard({ product, site }) {
   return (
@@ -26,7 +26,29 @@ export function ProductCard({ product, site }) {
           <p className="custom-price">{site.pricing.customPrice}</p>
         )}
       </div>
-      <p className="product-description">{product.description}</p>
+      <dl className="product-facts">
+        <div>
+          <dt>{site.pricing.idealLabel}</dt>
+          <dd>{product.description}</dd>
+        </div>
+        <div>
+          <dt>{site.pricing.structureLabel}</dt>
+          <dd>
+            {planValue(product, "design", site)}
+            <span>{planValue(product, "page", site)}</span>
+          </dd>
+        </div>
+        <div className="product-section-scope">
+          <dt>{site.pricing.sectionsLabel}</dt>
+          <dd>
+            <strong>{planValue(product, "sections", site)}</strong>
+            <span>{planValue(product, "sectionTypes", site)}</span>
+            {product.sectionsLink && (
+              <MoreLink href={product.sectionsLink.href}>{product.sectionsLink.label}</MoreLink>
+            )}
+          </dd>
+        </div>
+      </dl>
       <ul>
         {product.features.map((feature) => (
           <li key={feature}>
@@ -34,6 +56,10 @@ export function ProductCard({ product, site }) {
             <span>{feature}</span>
           </li>
         ))}
+        <li>
+          <Check size={15} aria-hidden="true" />
+          <span>{planValue(product, "revisions", site)}</span>
+        </li>
       </ul>
       <ContactButton
         site={site}
@@ -77,7 +103,7 @@ export function Comparison({ site }) {
                   <th scope="row">{row.label}</th>
                   {products.map((product) => (
                     <td key={product.id}>
-                      {product.comparison?.[row.key] || "A consultar"}
+                      {planValue(product, row.key, site)}
                     </td>
                   ))}
                 </tr>
@@ -93,7 +119,7 @@ export function Comparison({ site }) {
                 {site.comparison.rows.map((row) => (
                   <div key={row.key}>
                     <dt>{row.label}</dt>
-                    <dd>{product.comparison?.[row.key] || "A consultar"}</dd>
+                    <dd>{planValue(product, row.key, site)}</dd>
                   </div>
                 ))}
               </dl>
@@ -115,6 +141,25 @@ export default function Products({ site }) {
             <ProductCard key={product.id} product={product} site={site} />
           ))}
         </div>
+        <p className="content-count-note">{site.pricing.contentNote}</p>
+        <details className="section-guide">
+          <summary>
+            {site.pricing.sectionGuideLabel}
+            <ChevronDown size={18} aria-hidden="true" />
+          </summary>
+          <div className="section-types-grid">
+            {Object.entries(site.sectionTypes).map(([id, type]) => (
+              <div key={id}>
+                <h3>{type.name}</h3>
+                <p>{type.description}</p>
+                <p className="section-examples">
+                  <strong>{site.pricing.examplesLabel}:</strong>{" "}
+                  {type.examples.join(" · ")}
+                </p>
+              </div>
+            ))}
+          </div>
+        </details>
         <div className="pricing-notes">
           <p>{site.pricing.note}</p>
           <p>{site.pricing.payment}</p>

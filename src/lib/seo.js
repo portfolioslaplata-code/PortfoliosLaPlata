@@ -1,6 +1,7 @@
 import { getProducts } from "./site.js";
 import { theme } from "../data/theme.js";
 import { renderThemeHead } from "./theme.js";
+import { routes, normalizePath } from "../data/routes.js";
 
 const escape = (value) =>
   String(value).replace(
@@ -22,19 +23,29 @@ export function absoluteSiteUrl(value) {
   }
 }
 
-export function renderSeo(site) {
-  const seo = site.seo;
-  const url = absoluteSiteUrl(seo.siteUrl);
+export function renderSeo(site, pathname = "/") {
+  const path = normalizePath(pathname);
+  const route = routes.find((item) => item.path === path);
+  const seo = { ...site.seo, ...route?.seo };
+  const baseUrl = absoluteSiteUrl(seo.siteUrl);
+  const url = baseUrl ? new URL(path === "/" ? "" : path.slice(1), baseUrl).href : null;
   const socialImage =
-    url && seo.socialImage ? new URL(seo.socialImage, url).href : null;
+    baseUrl && seo.socialImage ? new URL(seo.socialImage, baseUrl).href : null;
   const organization = {
     "@type": "Organization",
     name: site.brand.name,
     email: site.contact.email,
     description: seo.description,
-    ...(url ? { url } : {}),
+    ...(baseUrl ? { url: baseUrl } : {}),
   };
-  const schema = {
+  const schema = path !== "/" ? {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: seo.title,
+    description: seo.description,
+    ...(url ? { url } : {}),
+    publisher: organization,
+  } : {
     "@context": "https://schema.org",
     "@type": "Service",
     name: "Creación de portfolios profesionales",

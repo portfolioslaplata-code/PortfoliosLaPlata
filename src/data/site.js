@@ -1,3 +1,5 @@
+import { homeSection } from "./routes.js";
+
 export const site = {
   brand: {
     name: "Portfolios La Plata",
@@ -9,10 +11,11 @@ export const site = {
     promise: "Tu experiencia · Tu identidad · Tu propio link",
   },
   navigation: [
-    { label: "Ejemplos", href: "#ejemplos" },
-    { label: "Planes", href: "#planes" },
-    { label: "Cómo funciona", href: "#proceso" },
-    { label: "Preguntas", href: "#preguntas" },
+    { label: "Ejemplos", href: homeSection("ejemplos") },
+    { label: "Planes", href: homeSection("planes") },
+    { label: "Secciones", href: "/secciones" },
+    { label: "Cómo funciona", href: homeSection("proceso") },
+    { label: "Preguntas", href: homeSection("preguntas") },
   ],
   hero: {
     eyebrow: "PORTFOLIOS WEB HECHOS PARA VOS",
@@ -118,10 +121,61 @@ export const site = {
       "Tres propuestas según lo que necesitás contar. Si no sabés cuál elegir, lo vemos juntos.",
     startingAt: "Desde",
     customPrice: "Cotización personalizada",
+    idealLabel: "IDEAL PARA",
+    structureLabel: "ESTRUCTURA",
+    sectionsLabel: "SECCIONES DE CONTENIDO",
+    contentNote:
+      "Hero (presentación inicial), contacto y footer básicos ya están incluidos y no cuentan dentro del límite de secciones de contenido.",
+    sectionGuideLabel: "¿Cómo son los distintos tipos de secciones?",
+    examplesLabel: "Por ejemplo",
+    sectionLimit: "Hasta {count} secciones de contenido",
+    customLimit: "Según tu necesidad y el alcance acordado",
+    revisionOne: "{count} ronda de ajustes",
+    revisionMany: "{count} rondas de ajustes",
+    revisionUpTo: "Hasta {count} rondas de ajustes",
+    customRevisions: "Ajustes según propuesta",
+    fallback: "A consultar",
     note: "Valores orientativos en pesos argentinos. El alcance y el presupuesto final se acuerdan antes de comenzar.",
     payment: "50% para comenzar y 50% antes de publicar.",
     delivery:
       "Los tiempos dependen del producto y de tener disponible todo el material necesario.",
+  },
+  sectionTypes: {
+    standard: {
+      name: "Secciones estándar",
+      label: "Estándar",
+      description:
+        "Elegís qué información mostrar y la presentamos con secciones de nuestra biblioteca, adaptadas al modelo y a tu perfil.",
+      examples: [
+        "Sobre mí",
+        "Experiencia y formación",
+        "Habilidades",
+        "Proyectos o servicios en tarjetas simples",
+      ],
+    },
+    advanced: {
+      name: "Secciones avanzadas",
+      label: "Avanzadas",
+      description:
+        "Recursos con más profundidad visual, narrativa o interacción para desarrollar tu trabajo. Elegimos los que aportan a tu historia; no necesitás usarlos todos.",
+      examples: [
+        "Proyectos con contexto, rol, proceso y resultados",
+        "Galerías ampliables o carruseles",
+        "Testimonios",
+        "Métricas y logros",
+      ],
+    },
+    custom: {
+      name: "Secciones a medida",
+      label: "A medida",
+      description:
+        "Diseñamos y desarrollamos lo que tu proyecto necesita cuando la biblioteca no alcanza. Cada sección o función se acuerda y presupuesta antes de comenzar.",
+      examples: [
+        "Catálogo con filtros",
+        "Formulario con lógica propia",
+        "Interacciones para tu profesión",
+      ],
+    },
   },
   products: [
     {
@@ -131,17 +185,15 @@ export const site = {
       price: 220000,
       currency: "ARS",
       badge: "",
-      tagline: "Todo lo que necesitás para presentarte profesionalmente.",
+      tagline: "Una forma clara de empezar tu presencia profesional.",
       description:
-        "Quiero una presencia profesional clara, moderna y lista para compartir.",
+        "Una web profesional sencilla, completa y lista para compartir.",
+      sections: { limit: 4, types: ["standard"] },
+      sectionsLink: { label: "Explorar secciones", href: "/secciones#standard" },
+      revisions: { count: 1 },
       features: [
-        "Una página con las secciones de tu perfil",
-        "Elegís un modelo y lo adaptamos a vos",
-        "Formación, experiencia, habilidades y trabajos",
-        "Servicios, redes y contacto",
+        "Adaptamos contenido, colores e imágenes a tu perfil",
         "Diseño para celular, tablet y computadora",
-        "SEO básico y publicación",
-        "Una ronda de ajustes",
       ],
       cta: "Consultar por Esencial",
       showcase: {
@@ -149,20 +201,20 @@ export const site = {
         eyebrow: "UNA PRESENTACIÓN CLARA, A TU MEDIDA",
         headline: "Elegí una base. Nosotros la hacemos tuya.",
         description:
-          "Son opciones de diseño del mismo producto: adaptamos el contenido, las imágenes y los colores a tu perfil. El alcance del servicio es el mismo, elijas el modelo que elijas.",
+          "Son distintos modelos del mismo producto. Elegís tu estilo y las secciones estándar que necesitás; adaptamos el contenido, las imágenes y los colores a tu perfil.",
         modelNote: "Distintos estilos. Un mismo producto.",
         demoCta: "Ver portfolio",
       },
       comparison: {
-        design: "Modelo a elección + tu identidad",
-        content: "Presentación y trabajos",
+        design: "Elegís un modelo y lo adaptamos a vos",
+        page: "Una página (one-page)",
         responsive: "Incluido",
         cv: "No incluido",
         domain: "No incluido",
         seo: "Básico",
         analytics: "No incluida",
-        revisions: "1 ronda",
-        special: "No incluido",
+        multipage: "No incluida",
+        special: "Secciones disponibles en el modelo",
       },
     },
     {
@@ -173,43 +225,44 @@ export const site = {
       currency: "ARS",
       badge: "Más posibilidades",
       featured: true,
-      tagline: "Más espacio para demostrar lo que sabés hacer.",
+      tagline:
+        "Más espacio para desarrollar tu recorrido y demostrar lo que sabés hacer.",
       description:
-        "Quiero mostrar mi trabajo y recorrido con mayor profundidad.",
+        "Experiencia, proyectos, servicios o resultados que merecen contarse con más profundidad.",
+      sections: { limit: 7, types: ["standard", "advanced"] },
+      sectionsLink: { label: "Explorar secciones", href: "/secciones#advanced" },
+      revisions: { count: 2, upTo: true },
       features: [
-        "Mayor personalización visual y de estructura",
-        "Proyectos desarrollados como casos de trabajo",
-        "Logros, testimonios y contenido ampliado",
+        "Más libertad visual y proyectos con contexto, proceso y resultados",
         "CV descargable",
         "Configuración de tu propio dominio¹",
-        "SEO ampliado y medición de visitas",
-        "Hasta dos rondas de ajustes",
+        "Diseño para celular, tablet y computadora",
       ],
       cta: "Consultar por Profesional",
       showcase: {
         layout: "expanded",
         eyebrow: "TU RECORRIDO, CON MÁS PROFUNDIDAD",
+        headline: "Más espacio para demostrar lo que sabés hacer.",
         description:
-          "Un producto con mayor adaptación visual y de estructura. Desarrollamos tus proyectos como casos de trabajo y les damos contexto a tu experiencia y tus logros.",
+          "Una base con mayor libertad visual y de estructura, que combina secciones estándar y avanzadas. Podés desarrollar un proyecto con contexto, tu rol, el desafío, el proceso y sus resultados.",
         demoCta: "Ver portfolio profesional",
         highlights: [
-          "Proyectos como casos de trabajo",
+          "Proyectos con contexto y resultados",
+          "Galerías, testimonios o logros según tu contenido",
           "CV descargable",
-          "SEO optimizado",
-          "Medición de visitas",
-          "Mayor personalización",
+          "Mayor libertad de presentación",
         ],
       },
       comparison: {
-        design: "Mayor personalización",
-        content: "Proyectos con contexto y logros",
+        design: "Base con mayor adaptación visual y de estructura",
+        page: "Una página (one-page)",
         responsive: "Incluido",
         cv: "Incluido",
         domain: "Configuración incluida¹",
         seo: "Ampliado",
         analytics: "Incluida",
-        revisions: "Hasta 2 rondas",
-        special: "Según el alcance acordado",
+        multipage: "No incluida",
+        special: "Recursos avanzados de nuestra biblioteca",
       },
     },
     {
@@ -219,27 +272,29 @@ export const site = {
       price: null,
       currency: "ARS",
       badge: "",
-      tagline: "Una experiencia diseñada desde cero para vos.",
-      description: "Necesito una experiencia diseñada alrededor de mi perfil.",
+      tagline: "Diseñado alrededor de lo que necesitás.",
+      description:
+        "Una idea o un contenido que necesita ir más allá de nuestros modelos.",
+      sections: { limit: null, types: ["custom"] },
+      sectionsLink: { label: "Ver posibilidades", href: "/secciones#custom" },
+      revisions: { count: null },
       features: [
-        "Diseño desde cero, a medida",
         "Arquitectura según tu contenido",
         "Posibilidad de múltiples páginas",
-        "Secciones e interacciones específicas",
-        "Funciones acordadas según tu necesidad",
-        "Alcance y ajustes definidos en la propuesta",
+        "Interacciones y funciones acordadas para tu proyecto",
+        "Alcance definido antes de comenzar",
       ],
       cta: "Contanos tu idea",
       comparison: {
         design: "Diseño desde cero",
-        content: "Arquitectura a medida",
+        page: "Según tu proyecto",
         responsive: "Incluido",
         cv: "Según propuesta",
         domain: "Según propuesta¹",
         seo: "Según propuesta",
         analytics: "Según propuesta",
-        revisions: "Según propuesta",
-        special: "Secciones y páginas a medida",
+        multipage: "Disponible según propuesta",
+        special: "Diseño y desarrollo según necesidad y propuesta",
       },
     },
   ],
@@ -251,15 +306,16 @@ export const site = {
     footnote:
       "¹ El registro y la renovación del dominio se abonan aparte. La publicación y cualquier costo recurrente se detallan en la propuesta.",
     rows: [
-      { key: "design", label: "Diseño e identidad" },
-      { key: "content", label: "Tu recorrido y proyectos" },
+      { key: "design", label: "Punto de partida" },
+      { key: "page", label: "Formato de la web" },
+      { key: "sections", label: "Secciones de contenido" },
+      { key: "sectionTypes", label: "Tipo de secciones" },
       { key: "responsive", label: "Adaptado a todos los dispositivos" },
       { key: "cv", label: "CV descargable" },
       { key: "domain", label: "Dominio propio" },
-      { key: "seo", label: "Preparación para buscadores" },
-      { key: "analytics", label: "Medición de visitas" },
+      { key: "multipage", label: "Múltiples páginas" },
       { key: "revisions", label: "Rondas de ajustes" },
-      { key: "special", label: "Necesidades especiales" },
+      { key: "special", label: "Funciones específicas" },
     ],
   },
   processIntro: {
@@ -348,13 +404,32 @@ export const site = {
       id: "modelos",
       question: "¿Todos los portfolios Esenciales son iguales?",
       answer:
-        "No. Elegís entre diferentes modelos visuales y adaptamos textos, colores, fotografías y los detalles contemplados en el plan. Los dos modelos actuales pertenecen al mismo producto Esencial.",
+        "No. Partimos de un modelo que elegís vos y adaptamos contenido, colores e imágenes a tu perfil. Podés elegir entre las secciones estándar disponibles. Cambia tu presentación, sin diseñar toda la web desde cero.",
     },
     {
       id: "diferencia",
       question: "¿Qué cambia de Esencial a Profesional?",
+      answerTemplate:
+        "Esencial presenta tu perfil con un modelo adaptado: {esencial.sections}, de tipo {esencial.sectionTypes}. Profesional desarrolla tu recorrido con más libertad visual: {profesional.sections}, de tipo {profesional.sectionTypes}. Podés mostrar proyectos con contexto, tu rol, proceso y resultados; además incluye CV descargable y configuración de dominio propio.",
+    },
+    {
+      id: "secciones",
+      question: "¿Qué cuenta como una sección?",
+      answerTemplate:
+        "Un bloque de contenido, como Sobre mí, Experiencia, Formación, Proyectos o Servicios. {contentNote}",
+    },
+    {
+      id: "tipos",
+      question:
+        "¿Qué diferencia hay entre una sección estándar y una avanzada?",
+      answerTemplate:
+        "{sectionTypes.standard.description} {sectionTypes.advanced.description} Por ejemplo, una tarjeta breve presenta un proyecto; un caso de trabajo desarrolla el contexto, tu rol y el resultado.",
+    },
+    {
+      id: "personalizado",
+      question: "¿Cuándo conviene un portfolio Personalizado?",
       answer:
-        "Esencial reúne tu información en una página a partir de un modelo. Profesional permite contar tu recorrido con más profundidad: proyectos como casos de trabajo, logros, CV descargable, mayor personalización de estructura y medición de visitas.",
+        "Cuando tu idea o contenido no encaja en nuestros modelos. Diseñamos desde cero la estructura, las secciones y las interacciones que necesitás. Puede tener varias páginas; la cantidad de contenido, las funciones y los ajustes se definen en la propuesta antes de comenzar.",
     },
     {
       id: "dominio",

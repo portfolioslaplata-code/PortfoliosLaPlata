@@ -1,4 +1,6 @@
 import { ArrowUp, ArrowUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { homeSection } from "../data/routes";
 import { Brand, ContactButton } from "./ui";
 import { instagramHref } from "../lib/site";
 
@@ -31,9 +33,9 @@ export default function Footer({ site }) {
         </div>
         <nav aria-label="Navegación al pie">
           {site.navigation.map((link) => (
-            <a key={link.href} href={link.href}>
+            <Link key={link.href} to={link.href}>
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
         <div className="footer-contact">
@@ -52,10 +54,10 @@ export default function Footer({ site }) {
           © {new Date().getFullYear()} {site.brand.name}.{" "}
           {site.footer.copyright}
         </p>
-        <a href="#inicio">
+        <Link to={homeSection("inicio")}>
           {site.footer.backToTop}
           <ArrowUp size={15} aria-hidden="true" />
-        </a>
+        </Link>
       </div>
     </footer>
   );

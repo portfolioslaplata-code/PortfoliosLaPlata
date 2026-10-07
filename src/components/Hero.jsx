@@ -1,4 +1,6 @@
 import { ArrowDown, Check } from "lucide-react";
+import { Link } from "react-router-dom";
+import { homeSection } from "../data/routes";
 import { ContactButton, DemoFrame, SectionHeading } from "./ui";
 import { getExamples } from "../lib/site";
 
@@ -25,10 +27,10 @@ export default function Hero({ site }) {
           <p className="hero-description">{site.hero.description}</p>
           <div className="hero-actions">
             <ContactButton site={site} />
-            <a className="button button-ghost" href="#ejemplos">
+            <Link className="button button-ghost" to={homeSection("ejemplos")}>
               {site.hero.secondaryCta}
               <ArrowDown size={17} aria-hidden="true" />
-            </a>
+            </Link>
           </div>
           <p className="hero-note">
             <Check size={16} aria-hidden="true" />

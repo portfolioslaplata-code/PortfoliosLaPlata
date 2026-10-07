@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Brand, ContactButton } from "./ui";
 
@@ -32,9 +33,9 @@ export default function Navbar({ site }) {
         <Brand site={site} />
         <nav className="desktop-navigation" aria-label="Navegación principal">
           {site.navigation.map((link) => (
-            <a key={link.href} href={link.href}>
+            <NavLink key={link.href} to={link.href} aria-current={link.href.includes("#") ? false : undefined}>
               {link.label}
-            </a>
+            </NavLink>
           ))}
         </nav>
         <ContactButton site={site} className="nav-contact">
@@ -62,9 +63,9 @@ export default function Navbar({ site }) {
         }}
       >
         {site.navigation.map((link) => (
-          <a key={link.href} href={link.href} onClick={() => setOpen(false)}>
+          <NavLink key={link.href} to={link.href} aria-current={link.href.includes("#") ? false : undefined} onClick={() => setOpen(false)}>
             {link.label}
-          </a>
+          </NavLink>
         ))}
         <ContactButton site={site}>{site.contact.navbarCta}</ContactButton>
       </nav>

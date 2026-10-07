@@ -29,7 +29,12 @@ Las pruebas de navegador usan Chrome instalado, en modo headless, y levantan su 
 src/
   data/site.js                Todo el contenido y la configuración comercial
   data/theme.js               Paleta central de la marca
+  data/routes.js              Rutas, SEO por página y helper de anchors de home
+  data/sections.js            Biblioteca visual y copy de /secciones
+  pages/                     HomePage y SectionsPage
   components/
+    RouteEffects.jsx          Metadata, scroll y foco al navegar
+    sections/                 Categorías, cards, mini previews y CTA a medida
     Navbar.jsx                Navegación de escritorio y menú móvil
     Hero.jsx                  Hero, propuesta y profesiones
     PortfolioShowcase.jsx     Grupos de producto con sus modelos y precio
@@ -44,10 +49,11 @@ src/
     seo.js                    Metadatos HTML y Schema.org
     theme.js                  Variables CSS y favicon derivados de la paleta
     analytics.js              Integración opcional de GA4
-  App.jsx                     Composición de las secciones
+  App.jsx                     Layout compartido y registro de páginas
   main.jsx                    Inicio/hidratación de React
   entry-server.jsx            Render estático durante el build
   styles.css                  Tokens Tailwind y estilos responsive
+  styles/sections.css         Catálogo y miniaturas con los mismos tokens
 public/
   images/demos/*.webp         Capturas reales guardadas localmente
 scripts/
@@ -56,9 +62,22 @@ scripts/
 tests/
   config.test.js              Cambios de catálogo, contacto y SEO
   browser/landing.spec.js     Responsive, teclado, enlaces y accesibilidad
+  browser/sections.spec.js    Catálogo, rutas, hashes, historial y SEO estático
 ```
 
 `App` recibe `site` como propiedad (por defecto importa la configuración). Esto permite verificar otros catálogos sin modificar los archivos comerciales. Las tarjetas, comparativa y metadatos se derivan de los mismos productos activos.
+
+## Rutas y catálogo de secciones
+
+React Router DOM usa `BrowserRouter` en el cliente y `StaticRouter` durante el prerenderizado. Existen dos rutas: `/` (landing) y `/secciones` (catálogo visual). Navbar, Footer y el enlace para saltar al contenido son compartidos. Las rutas desconocidas vuelven a `/` cuando se ejecuta JavaScript.
+
+`src/data/routes.js` es el registro común para `App`, SEO, prerenderizado y sitemap. Para sumar una página en el futuro, agregar su ruta y metadata allí y asociar su componente en `App.jsx`. No hay otras páginas implementadas.
+
+Usar `Link` de React Router para enlaces internos. `homeSection("planes")` devuelve `/#planes`, válido desde cualquier página. Los saltos del catálogo apuntan a `/secciones#standard`, `/secciones#advanced` y `/secciones#custom`. `RouteEffects` espera el render, contempla la carga de fuentes, respeta el espacio de la Navbar y lleva el foco al destino; una ruta sin hash empieza arriba. Los botones atrás/adelante recuperan la posición visitada. El scroll es inmediato, también con movimiento reducido.
+
+Editar `src/data/sections.js` para cambiar los textos, categorías, ejemplos y las 18 opciones iniciales. `SectionPreview` transforma los datos `preview` en miniaturas HTML/CSS decorativas (`aria-hidden`), sin imágenes ni librerías adicionales. Los nombres, cifras y comentarios dentro de esas miniaturas son ejemplos ilustrativos, no resultados o testimonios de la marca. No hay selección, configurador ni cálculo de precios.
+
+La disponibilidad y los límites se derivan de `site.products[].sections`: Esencial combina hasta 4 secciones estándar; Profesional, hasta 7 estándar o avanzadas; Personalizado define un alcance a medida. Hero y contacto/footer básicos no cuentan. Los enlaces informativos de cada tarjeta de Planes se configuran en `products[].sectionsLink`; el contacto continúa usando el canal existente.
 
 ## Precios, productos y promociones
 
@@ -76,9 +95,26 @@ Para agregar un producto, duplicar un objeto completo de `products` y darle un `
 
 Para eliminarlo, borrar su objeto o establecer `enabled: false`. Sus demos asociadas se ocultan automáticamente, al igual que su columna y su oferta en Schema.org. Los textos explicativos y las FAQ son editoriales: al retirar definitivamente un plan, actualizar o quitar también las respuestas que lo mencionan.
 
-La tabla se edita desde `comparison.rows`: cada `key` corresponde a una propiedad de `product.comparison`. Si falta un valor se muestra “A consultar”. En móvil se convierte en fichas por producto; no necesita desplazamiento horizontal.
+La tabla se edita desde `comparison.rows`: cada `key` corresponde a una propiedad de `product.comparison`, salvo `sections`, `sectionTypes` y `revisions`, que se calculan con `planValue` desde sus datos de alcance. Si falta un valor se muestra `pricing.fallback`. En móvil se convierte en fichas por producto; no necesita desplazamiento horizontal.
 
 `pricing.payment` y `pricing.delivery` controlan pago y plazo. La FAQ de pago usa `answerKey: 'paymentAndDelivery'`, de modo que los términos no se duplican. Dominio y costos recurrentes se explican en `comparison.footnote`; no se promete un dominio gratuito.
+
+## Secciones y alcance comercial
+
+`sectionTypes` centraliza nombre, etiqueta breve, descripción y ejemplos de cada tipo. La guía desplegable en Planes recorre ese objeto automáticamente: agregar un tipo o cambiar sus ejemplos no requiere tocar JSX. Los ejemplos son opciones, no una lista de funciones incluidas en todos los portfolios.
+
+Cada producto referencia los tipos por ID y define sus límites una sola vez:
+
+```js
+sections: { limit: 4, types: ['standard'] },
+revisions: { count: 1 },
+```
+
+Profesional usa `types: ['standard', 'advanced']`, `limit: 7` y `revisions: { count: 2, upTo: true }`. Personalizado usa `types: ['custom']`, `limit: null` y `revisions: { count: null }`: no significa contenido ilimitado, sino alcance y ajustes definidos en la propuesta.
+
+`pricing` contiene etiquetas, plantillas de límites y rondas, y `contentNote`: Hero y contacto/footer básicos no consumen secciones. Las tarjetas, la comparativa y las FAQ comparten `planValue`; no repetir cantidades en `features` ni en `comparison`. `features` conserva los beneficios editoriales. `comparison.design` y `comparison.page` también alimentan el bloque Estructura de las tarjetas. Los valores secundarios de SEO y Analytics siguen documentados en los datos, sin protagonismo en la comparativa.
+
+Las FAQ pueden usar `answerTemplate`, con marcadores como `{esencial.sections}`, `{profesional.sectionTypes}`, `{contentNote}` o `{sectionTypes.standard.description}`. Los límites y definiciones se resuelven desde la configuración actual. Para una respuesta editorial simple, seguir usando `answer`. Al retirar un producto, revisar también las preguntas que lo mencionan.
 
 ## Demos y screenshots
 
@@ -122,7 +158,7 @@ showcase: {
 
 `headline` usa `product.tagline` si no se define. Los demás textos tienen fallbacks al producto o a `site.showcase`. Los contadores de modelos son dinámicos. El nombre del grupo y el precio se leen directamente del producto: no duplicarlos dentro de `showcase`.
 
-Esencial usa `layout: 'models'`: introducción compartida y modelos Editorial y Minimal juntos. Profesional usa `layout: 'expanded'`: bloque independiente con mayor separación, fondo neutro diferenciado, captura completa e indicadores de alcance. Esta separación se mantiene también en móvil y se aplica a todos los modelos futuros de ese producto.
+Esencial usa `layout: 'models'`: introducción compartida y modelos Editorial y Minimal juntos. Profesional usa `layout: 'expanded'`: demo más amplia, captura e indicadores de profundidad. Ambos tienen el mismo encabezado de producto, con el precio fuera de las tarjetas de modelos. El protagonismo de Profesional está en su demo y el acento del separador, sin encerrar el precio dentro de un contenedor que parezca una tarjeta.
 
 Las imágenes actuales **son capturas reales**, no placeholders, de:
 
@@ -201,9 +237,11 @@ Editar **`seo`** en la configuración:
 
 Se generan title, description, favicon, Open Graph, Twitter/X y JSON-LD **Service + Organization + OfferCatalog**. Los precios iniciales se expresan como `minPrice`, sin inventar reseñas, dirección física o antigüedad. Sin imagen social se utiliza tarjeta `summary`; con dominio e imagen configurados, `summary_large_image`. No se inventó una imagen social ni una URL pública de esta landing.
 
-`npm run build` prerenderiza **toda la página** a `dist/index.html`, además de `robots.txt` y el sitemap cuando existe dominio. Las etiquetas sociales y el contenido están disponibles sin JavaScript. No editar `dist` a mano: cambiar la configuración y reconstruir. Si se modifica SEO durante desarrollo, reiniciar Vite para volver a generar las etiquetas del head.
+`npm run build` prerenderiza ambas páginas a `dist/index.html` y `dist/secciones/index.html`, además de `robots.txt` y el sitemap con ambas rutas cuando existe dominio. La home conserva su schema Service; el catálogo usa CollectionPage. Cada ruta tiene su propio título, descripción y etiquetas sociales, disponibles sin JavaScript y actualizados al navegar en el cliente. No editar `dist` a mano: cambiar la configuración y reconstruir.
 
 El resultado es un sitio estático que puede publicarse en un hosting de archivos estáticos. Comando de build: `npm run build`; directorio de salida: `dist`. No requiere servidor de React en producción.
+
+El hosting debe servir `/secciones` desde `secciones/index.html` (o resolver directorios con `index.html`). Conservar ese archivo de ruta antes de cualquier fallback de SPA para mantener el SEO y el contenido sin JavaScript. Vite preview ya sirve ambas rutas y sus recargas; no se agregó configuración de un proveedor ni se publicó esta iteración.
 
 ## Analytics opcional
 
@@ -225,4 +263,6 @@ Se requieren **ambas** condiciones; IDs inválidos tampoco cargan scripts. El ID
 - `npm run test:browser`: 320, 375, 430, 768, 1024 y 1440 px; overflow con comparativa abierta; menú por teclado/Escape; FAQ; enlaces y capturas locales; tracking desactivado; HTML sin JavaScript. Incluye axe WCAG A/AA en móvil y escritorio. Una auditoría automática no reemplaza una revisión humana de accesibilidad.
 - Capturas de revisión generadas en `test-results/`, excluidas de control de versiones.
 
-La landing tiene su repositorio independiente. Para esta iteración se siguieron, por indicación del usuario, `../Productos/AGENTS.md` y las decisiones compartidas de `../Productos/producto-docs/`. No se modificaron los modelos de producto. La comparativa de Esencial ahora indica explícitamente que CV, dominio propio y Analytics no forman parte de la oferta estándar, según `catalogo.md`.
+El catálogo agrega comprobaciones a 320, 375, 430, 768, 900, 1024 y 1440 px; navegación home ↔ catálogo, Navbar y Footer, saltos a Planes/Ejemplos/Proceso/Preguntas, repetición del mismo hash, historial, recargas, menú móvil por teclado, ausencia de overflow, axe y prerenderizado sin JavaScript.
+
+La landing tiene su repositorio independiente. Para esta iteración se siguieron, por indicación del usuario, `../Productos/AGENTS.md` y las decisiones compartidas de `../Productos/producto-docs/`. El catálogo compartido refleja los nuevos límites, tipos de secciones y rondas; no se modificaron los modelos de producto. La comparativa prioriza estructura y contenido, mantiene las diferencias de CV y dominio, y deja SEO y Analytics como información secundaria en los datos y la documentación.

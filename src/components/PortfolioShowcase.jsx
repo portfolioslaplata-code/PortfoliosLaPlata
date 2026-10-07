@@ -1,4 +1,6 @@
 import { Check, ArrowUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { homeSection } from "../data/routes";
 import { DemoFrame, DemoLink, SectionHeading } from "./ui";
 import { getShowcaseGroups, priceLabel } from "../lib/site";
 
@@ -77,7 +79,7 @@ export default function PortfolioShowcase({ site }) {
                 aria-labelledby={`showcase-${product.id}`}
                 data-product={product.id}
               >
-                <div className="showcase-group-heading">
+                <header className="showcase-group-heading">
                   <div className="showcase-product-title">
                     <span className="showcase-number" aria-hidden="true">
                       {String(index + 1).padStart(2, "0")}
@@ -89,7 +91,7 @@ export default function PortfolioShowcase({ site }) {
                       <h3 id={`showcase-${product.id}`}>{product.name}</h3>
                     </div>
                   </div>
-                  <a href="#planes" className="showcase-price">
+                  <Link to={homeSection("planes")} className="showcase-price">
                     <span>
                       {product.price != null ? (
                         <>
@@ -105,8 +107,8 @@ export default function PortfolioShowcase({ site }) {
                       {site.showcase.priceCta}
                       <ArrowUpRight size={14} aria-hidden="true" />
                     </span>
-                  </a>
-                </div>
+                  </Link>
+                </header>
                 <div className="showcase-group-intro">
                   <p className="showcase-headline">
                     {config.headline || product.tagline}

@@ -27,6 +27,27 @@ for (const width of [320, 375, 430, 768, 1024, 1440]) {
       "CV descargable",
     );
     await expect(professional).toHaveClass(/showcase-group-expanded/);
+    await expect(page.locator(".portfolio-card .showcase-price")).toHaveCount(
+      0,
+    );
+    await expect(essential.locator("header .showcase-price")).toContainText(
+      "220.000",
+    );
+    await expect(professional.locator("header .showcase-price")).toContainText(
+      "350.000",
+    );
+    await expect(page.locator(".product-section-scope").nth(0)).toContainText(
+      "Hasta 4 secciones de contenido",
+    );
+    await expect(page.locator(".product-section-scope").nth(1)).toContainText(
+      "Estándar + Avanzadas",
+    );
+    await expect(page.locator(".product-section-scope").nth(2)).toContainText(
+      "Según tu necesidad y el alcance acordado",
+    );
+    await expect(page.locator(".content-count-note")).toContainText(
+      "no cuentan dentro del límite",
+    );
     await expect(page.locator(".product-price").nth(0)).toContainText(
       "220.000",
     );
@@ -38,6 +59,25 @@ for (const width of [320, 375, 430, 768, 1024, 1440]) {
         () => document.documentElement.scrollWidth > window.innerWidth,
       );
     expect(await overflow()).toBe(false);
+    await page.locator(".section-guide > summary").click();
+    await expect(page.locator(".section-types-grid h3")).toHaveText([
+      "Secciones estándar",
+      "Secciones avanzadas",
+      "Secciones a medida",
+    ]);
+    expect(await overflow()).toBe(false);
+    await page
+      .getByText("¿Qué cuenta como una sección?", { exact: true })
+      .click();
+    await expect(page.locator(".faq-list details[open]")).toContainText(
+      "no cuentan dentro del límite",
+    );
+    await page
+      .getByText("¿Qué cambia de Esencial a Profesional?", { exact: true })
+      .click();
+    await expect(page.locator(".faq-list details[open]")).toContainText(
+      "Hasta 7 secciones de contenido",
+    );
     await page.locator(".comparison > summary").click();
     await expect(page.locator(".comparison")).toHaveAttribute("open", "");
     expect(await overflow()).toBe(false);
@@ -57,6 +97,13 @@ for (const width of [320, 375, 430, 768, 1024, 1440]) {
         .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
         .analyze();
       expect(results.violations).toEqual([]);
+      await page
+        .locator(".section-guide")
+        .screenshot({
+          path: `test-results/section-guide-${width}.png`,
+          style: ".site-header, .skip-link { visibility: hidden !important; }",
+        });
+      await page.locator(".section-guide > summary").click();
       await page.locator(".comparison > summary").click();
       await page.locator(".faq-list summary").nth(1).click();
       for (const image of await page.locator("img").all()) {
@@ -72,22 +119,18 @@ for (const width of [320, 375, 430, 768, 1024, 1440]) {
       const sectionCapture = {
         style: ".site-header, .skip-link { visibility: hidden !important; }",
       };
-      await page
-        .locator("#ejemplos")
-        .screenshot({
-          ...sectionCapture,
-          path: `test-results/examples-${width}.png`,
-        });
+      await page.locator("#ejemplos").screenshot({
+        ...sectionCapture,
+        path: `test-results/examples-${width}.png`,
+      });
       await professional.screenshot({
         ...sectionCapture,
         path: `test-results/professional-${width}.png`,
       });
-      await page
-        .locator("#planes")
-        .screenshot({
-          ...sectionCapture,
-          path: `test-results/pricing-${width}.png`,
-        });
+      await page.locator("#planes").screenshot({
+        ...sectionCapture,
+        path: `test-results/pricing-${width}.png`,
+      });
       await page.evaluate(() => window.scrollTo(0, 0));
       await page.screenshot({
         path: `test-results/landing-${width}.png`,

@@ -1,11 +1,13 @@
 import { ArrowUpRight, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { homeSection } from "../data/routes";
 import { contactHref } from "../lib/site";
 
 export function Brand({ site }) {
   return (
-    <a
+    <Link
       className="brand"
-      href="#inicio"
+      to={homeSection("inicio")}
       aria-label={`${site.brand.name}, inicio`}
     >
       <span className="brand-symbol" aria-hidden="true">
@@ -15,7 +17,7 @@ export function Brand({ site }) {
         {site.brand.shortName}
         <span>{site.brand.location}</span>
       </span>
-    </a>
+    </Link>
   );
 }
 
@@ -95,9 +97,9 @@ export function DemoLink({ example, children, className = "" }) {
 
 export function MoreLink({ href, children }) {
   return (
-    <a href={href} className="text-link">
+    <Link to={href.startsWith("#") ? homeSection(href) : href} className="text-link">
       {children}
       <ArrowRight size={18} aria-hidden="true" />
-    </a>
+    </Link>
   );
 }
