@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
-for (const width of [320, 375, 430, 768, 800, 801, 900, 1024, 1100, 1440]) {
+for (const width of [320, 375, 430, 768, 800, 801, 900, 1024, 1100, 1440, 1920]) {
   test(`base, secciones y ejemplos sin overflow a ${width}px`, async ({ page }) => {
     const errors = [];
     page.on("pageerror", (error) => errors.push(error.message));
@@ -9,6 +9,15 @@ for (const width of [320, 375, 430, 768, 800, 801, 900, 1024, 1100, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(page.locator('.hero-stamp, .visual-caption, .visual-bottom, .benefits, .pricing-step')).toHaveCount(0);
+    await expect(page.locator('.hero-visual > a')).toHaveCount(2);
+    expect(await page.locator('.hero-visual > a').evaluateAll((links) => links.every((link) => {
+      const rect = link.getBoundingClientRect();
+      return rect.left >= 0 && rect.right <= innerWidth;
+    }))).toBe(true);
+    await expect(page.locator('.pricing-base > .eyebrow')).toHaveText('EL PUNTO DE PARTIDA');
+    await expect(page.locator('.step-number')).toHaveText(['01', '02', '03', '04', '05']);
+    await expect(page.locator('#proceso + #preguntas + #contacto')).toHaveCount(1);
     await expect(page.locator(".portfolio-card")).toHaveCount(3);
     await expect(page.locator(".portfolio-info h3")).toHaveText(["Editorial", "Minimal", "Profundidad"]);
     await expect(page.locator(".demo-composition > strong")).toHaveText([

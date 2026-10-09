@@ -345,27 +345,15 @@ h1 > span {
   color: var(--color-primary);
 }
 .hero-visual {
-  height: 470px;
+  height: 440px;
   position: relative;
   background: var(--color-secondary);
   border-radius: 45% 45% 8px 8px;
-  padding: 55px 16px;
-}
-.visual-caption {
-  position: absolute;
-  top: 20px;
-  left: 31px;
-  right: 31px;
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.58rem;
-  letter-spacing: 0.11em;
-  color: var(--color-primary);
 }
 .hero-primary-demo {
   display: block;
   position: absolute;
-  top: 70px;
+  top: 45px;
   left: -10px;
   width: 95%;
   transform: rotate(-5deg);
@@ -414,45 +402,12 @@ h1 > span {
   position: absolute;
   width: 61%;
   right: -14px;
-  bottom: 55px;
+  bottom: 35px;
   transform: rotate(5deg);
   transition: transform 0.3s;
 }
 .hero-secondary-demo:hover {
   transform: rotate(2deg) translateY(-4px);
-}
-.hero-stamp {
-  position: absolute;
-  left: 4px;
-  bottom: 44px;
-  width: 105px;
-  height: 105px;
-  background: var(--color-accent);
-  color: var(--color-primary);
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transform: rotate(-12deg);
-  box-shadow: 0 4px 12px var(--color-shadow);
-}
-.hero-stamp span {
-  font-size: 0.65rem;
-}
-.hero-stamp strong {
-  font: 650 1.1rem var(--font-display);
-}
-.visual-bottom {
-  position: absolute;
-  bottom: 17px;
-  left: 20px;
-  right: 20px;
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  color: var(--color-muted);
-  font-size: 0.57rem;
 }
 .origin-strip {
   background: var(--color-secondary);
@@ -505,6 +460,11 @@ h1 > span {
   border-radius: 10px;
   background: var(--color-background);
   overflow: hidden;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.demo-grid .portfolio-card:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 8px 18px var(--color-shadow);
 }
 .portfolio-preview {
   padding: 35px 32px 0;
@@ -589,6 +549,25 @@ h1 > span {
   background: var(--color-secondary);
   border-color: transparent;
 }
+.profession-list li:not(.profession-ending) {
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .demo-grid .portfolio-card:hover {
+    border-color: color-mix(in srgb, var(--color-primary) 25%, var(--color-border));
+    box-shadow: 0 8px 18px var(--color-shadow);
+  }
+  .profession-list li:not(.profession-ending):hover {
+    background: var(--color-secondary);
+    border-color: color-mix(in srgb, var(--color-primary) 25%, var(--color-border));
+    color: var(--color-primary);
+  }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .demo-grid .portfolio-card:hover {
+    transform: translateY(-3px);
+  }
+}
 
 .heading-centered {
   text-align: center;
@@ -645,33 +624,6 @@ summary::-webkit-details-marker {
   border-top: 1px solid var(--color-border);
   margin-top: 38px;
   padding-top: 19px;
-}
-.benefits {
-  border-bottom: 1px solid var(--color-border);
-}
-.benefits-layout {
-  display: grid;
-  grid-template-columns: 0.9fr 1.3fr;
-  gap: 70px;
-}
-.benefit-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 40px 35px;
-}
-.benefit-grid article > svg {
-  color: var(--color-primary);
-  margin-bottom: 19px;
-}
-.benefit-grid h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  line-height: 1.4;
-}
-.benefit-grid p {
-  margin-top: 10px;
-  color: var(--color-muted);
-  font-size: 0.92rem;
 }
 .faq {
   display: grid;
@@ -837,9 +789,6 @@ summary::-webkit-details-marker {
   .process-steps {
     gap: 19px;
   }
-  .benefits-layout {
-    gap: 40px;
-  }
   .faq {
     gap: 55px;
   }
@@ -880,13 +829,9 @@ summary::-webkit-details-marker {
   .process-timing {
     margin-top: 0;
   }
-  .benefits-layout,
   .faq {
     grid-template-columns: 1fr;
     gap: 30px;
-  }
-  .benefits .section-heading {
-    margin-bottom: 10px;
   }
   .faq .section-description {
     max-width: none;
@@ -909,21 +854,6 @@ summary::-webkit-details-marker {
   }
 }
 @media (max-width: 520px) {
-  .benefit-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-  .benefit-grid article {
-    padding-bottom: 28px;
-    border-bottom: 1px solid var(--color-border);
-  }
-  .benefit-grid article:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-  .benefit-grid article > svg {
-    margin-bottom: 14px;
-  }
   .faq {
     gap: 27px;
   }
@@ -985,18 +915,13 @@ summary::-webkit-details-marker {
     min-height: 590px;
   }
   .hero-visual {
-    height: 400px;
+    height: 370px;
   }
   .hero-primary-demo {
-    top: 75px;
+    top: 50px;
   }
   .hero-secondary-demo {
-    bottom: 65px;
-  }
-  .hero-stamp {
-    width: 90px;
-    height: 90px;
-    bottom: 40px;
+    bottom: 45px;
   }
   .portfolio-preview {
     height: 240px;
@@ -1068,13 +993,13 @@ summary::-webkit-details-marker {
   .hero-visual {
     width: min(530px, 95%);
     margin-inline: auto;
-    height: 440px;
+    height: 410px;
   }
   .hero-primary-demo {
-    top: 55px;
+    top: 30px;
   }
   .hero-secondary-demo {
-    bottom: 45px;
+    bottom: 25px;
   }
   .introduction {
     grid-template-columns: 1fr;
@@ -1142,40 +1067,16 @@ summary::-webkit-details-marker {
     align-items: start;
   }
   .hero-visual {
-    height: 345px;
+    height: 305px;
     margin-top: 5px;
   }
   .hero-primary-demo {
-    top: 53px;
+    top: 28px;
     left: -2px;
   }
   .hero-secondary-demo {
     right: -7px;
-    bottom: 42px;
-  }
-  .hero-stamp {
-    width: 80px;
-    height: 80px;
-    bottom: 42px;
-  }
-  .hero-stamp strong {
-    font-size: 0.92rem;
-  }
-  .hero-stamp span {
-    font-size: 0.6rem;
-  }
-  .visual-caption {
-    font-size: 0.52rem;
-    left: 15px;
-    right: 15px;
-  }
-  .visual-bottom {
-    font-size: 0.52rem;
-    left: 9px;
-    right: 9px;
-  }
-  .visual-bottom span:first-child {
-    max-width: 120px;
+    bottom: 22px;
   }
   .origin-strip {
     padding-block: 16px;
@@ -1215,14 +1116,14 @@ summary::-webkit-details-marker {
 }
 @media (max-width: 360px) {
   .hero-visual {
-    height: 300px;
+    height: 260px;
   }
   .hero-actions {
     flex-direction: column;
     align-items: stretch;
   }
   .hero-primary-demo {
-    top: 48px;
+    top: 23px;
   }
   h1 {
     font-size: 2.24rem;

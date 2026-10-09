@@ -15,13 +15,12 @@
 .pricing-additions-intro > svg { padding: 9px; box-sizing: content-box; background: var(--color-accent); color: var(--color-primary); border-radius: 50%; }
 .pricing-additions-intro h3 { font-size: 1.2rem; margin-bottom: 9px; }
 .pricing-additions-intro p { font-size: .88rem; color: var(--color-muted); }
-.pricing-addition { display: grid; grid-template-columns: 30px 1fr; gap: 20px; border-top: 1px solid var(--color-border); padding-block: 27px; }
-.pricing-step { font: 500 .8rem/1.8 var(--font-display); color: var(--color-primary); }
+.pricing-addition { border-top: 1px solid var(--color-border); padding-block: 27px; }
 .pricing-addition h3 { font-size: 1.25rem; font-weight: 600; }
 .pricing-addition .modular-price { font-size: 1.1rem; margin-block: 10px 14px; }
 .addition-examples { font-size: .8rem; color: var(--color-muted); margin-top: 15px; }
 .pricing-addition .text-link { margin-top: 8px; }
-.pricing-custom { display: grid; grid-template-columns: 30px 1fr auto; align-items: center; gap: 20px; margin-top: 30px; padding: 28px 32px; border: 1px dashed var(--color-border); border-radius: 8px; }
+.pricing-custom { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 20px; margin-top: 30px; padding: 28px 32px; border: 1px dashed var(--color-border); border-radius: 8px; }
 .pricing-custom h3 { font-size: 1.2rem; }
 .pricing-custom p { color: var(--color-muted); font-size: .87rem; max-width: 650px; margin-block: 8px; }
 .pricing-custom strong { font-size: .9rem; font-weight: 500; }
@@ -90,8 +89,8 @@
 }
 @media (max-width: 800px) {
   .pricing-composition { grid-template-columns: 1fr; gap: 32px; }
-  .pricing-custom { grid-template-columns: 24px 1fr; padding: 24px; gap: 14px; }
-  .pricing-custom .button { grid-column: 2; justify-self: start; }
+  .pricing-custom { grid-template-columns: 1fr; padding: 24px; gap: 14px; }
+  .pricing-custom .button { justify-self: start; }
   .budget-example { padding: 26px; }
   .budget-total { margin-left: 0; }
   .demo-grid { grid-template-columns: 1fr; max-width: 580px; margin-inline: auto; gap: 25px; }
@@ -103,10 +102,8 @@
   .pricing-base { padding: 24px 20px; }
   .pricing-base .modular-price { font-size: 1.4rem; }
   .pricing-additions-intro { gap: 14px; }
-  .pricing-addition { grid-template-columns: 22px 1fr; gap: 12px; }
   .pricing-addition .modular-price { font-size: 1rem; }
-  .pricing-custom { grid-template-columns: 1fr; padding: 22px; }
-  .pricing-custom .button { grid-column: auto; }
+  .pricing-custom { padding: 22px; }
   .budget-example { padding: 24px 20px; }
   .budget-equation { flex-direction: column; align-items: stretch; gap: 18px; }
   .budget-addition { gap: 14px; align-items: start; }

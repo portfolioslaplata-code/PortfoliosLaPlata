@@ -38,7 +38,7 @@ export default function Pricing({ site }) {
         <SectionHeading {...site.pricing} />
         <div className="pricing-composition">
           <article className="pricing-base" aria-labelledby="base-title">
-            <p className="eyebrow">01 — {site.pricing.baseLabel}</p>
+            <p className="eyebrow">{site.pricing.baseLabel}</p>
             <h3 id="base-title">{base.name}</h3>
             <p className="base-tagline">{base.tagline}</p>
             <p className="modular-price">{startingPrice(site, base)}</p>
@@ -52,9 +52,8 @@ export default function Pricing({ site }) {
               <Plus size={24} aria-hidden="true" />
               <div><h3>{site.pricing.additionsTitle}</h3><p>{site.pricing.additionsNote}</p></div>
             </div>
-            {Object.entries(sectionTypes).map(([id, type], index) => (
+            {Object.entries(sectionTypes).map(([id, type]) => (
               <article className="pricing-addition" key={id} data-section-type={id}>
-                <span className="pricing-step" aria-hidden="true">0{index + 2}</span>
                 <div>
                   <h3>{type.name}</h3>
                   <p className="modular-price">{startingPrice(site, type, true)}</p>
@@ -67,7 +66,6 @@ export default function Pricing({ site }) {
           </div>
         </div>
         <div className="pricing-custom">
-          <span className="pricing-step" aria-hidden="true">04</span>
           <div><h3>{custom.title}</h3><p>{custom.description}</p><strong>{site.pricingModel.customQuote}</strong></div>
           <ContactButton site={site} className="button-outline">{custom.cta}</ContactButton>
         </div>

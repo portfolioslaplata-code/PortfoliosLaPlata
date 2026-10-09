@@ -36,15 +36,7 @@ export const site = {
     "description": "Creamos portfolios web profesionales para reunir tu experiencia, formación y proyectos en un lugar propio. Para mostrar lo que hacés y compartirlo con un solo link.",
     "primaryCta": "Quiero mi portfolio",
     "secondaryCta": "Ver ejemplos",
-    "note": "Para estudiantes, freelancers y profesionales. Estés donde estés.",
-    "previewLabel": "Tu próximo paso, en primera pantalla.",
-    "previewNote": "Distintas miradas. Tu identidad.",
-    "previewEyebrow": "01 — TU ESPACIO PROFESIONAL",
-    "stamp": [
-      "tu trabajo,",
-      "tu lugar.",
-      "en internet ↗"
-    ]
+    "note": "Para estudiantes, freelancers y profesionales. Estés donde estés."
   },
   "introduction": {
     "eyebrow": "DALE UN LUGAR A LO QUE HACÉS",
@@ -293,32 +285,6 @@ export const site = {
     {
       "title": "Revisamos y publicamos",
       "description": "Aplicamos la ronda inicial de ajustes incluida en la base y lo dejamos online. Los cambios adicionales se acuerdan según su alcance."
-    }
-  ],
-  "benefitsIntro": {
-    "eyebrow": "MÁS QUE ESTAR ONLINE",
-    "title": "Un lugar que trabaja\na favor de tu carrera."
-  },
-  "benefits": [
-    {
-      "icon": "link",
-      "title": "Todo, en un solo link.",
-      "description": "En tu CV, LinkedIn, redes o una postulación. Compartí tu recorrido sin adjuntar una carpeta entera."
-    },
-    {
-      "icon": "fingerprint",
-      "title": "Tu perfil, tus formas.",
-      "description": "Tu profesión tiene su propia manera de mostrar valor. Tu portfolio también debería tenerla."
-    },
-    {
-      "icon": "devices",
-      "title": "Una buena primera impresión.",
-      "description": "Una presentación clara y cuidada, desde el celular o la computadora de quien te encuentre."
-    },
-    {
-      "icon": "growth",
-      "title": "Crece con tu recorrido.",
-      "description": "Nuevos proyectos, experiencias y servicios pueden sumarse después. Las actualizaciones se acuerdan según lo que necesites."
     }
   ],
   "faqIntro": {

@@ -39,10 +39,6 @@ export default function Hero({ site }) {
         </div>
         {primary && (
           <div className="hero-visual">
-            <div className="visual-caption">
-              <span>{site.hero.previewEyebrow}</span>
-              <span aria-hidden="true">↗</span>
-            </div>
             <a
               className="hero-primary-demo"
               href={primary.url}
@@ -63,15 +59,6 @@ export default function Hero({ site }) {
                 <DemoFrame example={secondary} eager />
               </a>
             )}
-            <div className="hero-stamp" aria-hidden="true">
-              <span>{site.hero.stamp[0]}</span>
-              <strong>{site.hero.stamp[1]}</strong>
-              <span>{site.hero.stamp[2]}</span>
-            </div>
-            <div className="visual-bottom">
-              <span>{site.hero.previewLabel}</span>
-              <span>{site.hero.previewNote}</span>
-            </div>
           </div>
         )}
       </section>
