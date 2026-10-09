@@ -7,7 +7,7 @@ export default function RouteEffects({ site }) {
   const location = useLocation();
   const navigationType = useNavigationType();
   const positions = useRef(new Map());
-  const previousKey = useRef(null);
+  const previousLocation = useRef(null);
 
   useEffect(() => {
     const head = new DOMParser().parseFromString(renderSeo(site, location.pathname), "text/html").head;
@@ -22,8 +22,11 @@ export default function RouteEffects({ site }) {
     const oldRestoration = window.history.scrollRestoration;
     window.history.scrollRestoration = "manual";
     let cancelled = false;
-    const isNavigation = previousKey.current !== null && previousKey.current !== location.key;
-    previousKey.current = location.key;
+    const isNavigation = previousLocation.current !== null && previousLocation.current.key !== location.key;
+    const smoothHomeNavigation = isNavigation && navigationType === "PUSH" &&
+      previousLocation.current.pathname === "/" && location.pathname === "/" &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    previousLocation.current = { key: location.key, pathname: location.pathname };
     const savedPosition = positions.current.get(location.key);
     let hash = location.hash.slice(1);
     try { hash = decodeURIComponent(hash); } catch { /* Invalid hashes have no target. */ }
@@ -35,7 +38,7 @@ export default function RouteEffects({ site }) {
         window.scrollTo({ top: savedPosition, behavior: "instant" });
       } else if (target) {
         // scroll-padding-top in global CSS accounts for the sticky navbar.
-        target.scrollIntoView({ block: "start", behavior: "instant" });
+        target.scrollIntoView({ block: "start", behavior: smoothHomeNavigation ? "smooth" : "instant" });
       } else {
         window.scrollTo({ top: 0, behavior: "instant" });
       }
@@ -56,7 +59,8 @@ export default function RouteEffects({ site }) {
     window.addEventListener("wheel", cancelCorrection, { passive: true });
     window.addEventListener("touchstart", cancelCorrection, { passive: true });
     window.addEventListener("keydown", cancelCorrection);
-    document.fonts?.ready.then(move);
+    // Only initial loads need font correction; never restart a navigation animation.
+    if (!isNavigation && document.fonts?.status === "loading") document.fonts.ready.then(move);
     const remember = () => positions.current.set(location.key, window.scrollY);
     window.addEventListener("scroll", remember, { passive: true });
     return () => {

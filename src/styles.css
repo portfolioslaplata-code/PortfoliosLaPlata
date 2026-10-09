@@ -270,9 +270,38 @@ svg {
   font-size: 0.84rem;
   padding-block: 16px;
 }
-.desktop-navigation a:hover {
-  text-decoration: underline;
-  text-underline-offset: 6px;
+.desktop-navigation a > span {
+  position: relative;
+}
+.desktop-navigation a > span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+.desktop-navigation a[aria-current="page"] {
+  text-decoration: none;
+}
+.desktop-navigation a:focus-visible > span::after,
+.desktop-navigation a[aria-current="page"] > span::after {
+  transform: scaleX(1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .desktop-navigation a:hover > span::after {
+    transform: scaleX(1);
+  }
+}
+.desktop-navigation .nav-sections {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 12px;
 }
 .nav-contact {
   font-size: 0.82rem;
@@ -909,6 +938,9 @@ summary::-webkit-details-marker {
   }
   .desktop-navigation {
     gap: 19px;
+  }
+  .desktop-navigation .nav-sections {
+    margin-left: 4px;
   }
   .hero {
     gap: 30px;
