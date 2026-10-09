@@ -1,7 +1,7 @@
 import { startingPrice } from "../../lib/site";
 import SectionCard from "./SectionCard";
 
-export default function SectionCategory({ category, site }) {
+export default function SectionCategory({ category, site, onExplore }) {
   return (
     <section id={category.id} className={`section-category category-${category.id} section-space`} aria-labelledby={`${category.id}-title`}>
       <div className="container">
@@ -18,7 +18,7 @@ export default function SectionCategory({ category, site }) {
         </div>
         <p className="catalog-pricing-note">{site.pricing.note}</p>
         <div className="sections-grid">
-          {category.items.map((item) => <SectionCard key={item.id} item={item} category={category} />)}
+          {category.items.map((item) => <SectionCard key={item.id} item={item} category={category} onExplore={onExplore} />)}
         </div>
       </div>
     </section>

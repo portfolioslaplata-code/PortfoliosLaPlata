@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { DemoFrame, DemoLink, MoreLink, SectionHeading } from "./ui";
 import { demoComposition, getExamples } from "../lib/site";
 
@@ -15,8 +16,13 @@ function PortfolioCard({ example, site }) {
         <p>{example.description}</p>
         <div className="demo-composition">
           <p>{site.showcase.compositionLabel}</p>
+          <strong>{composition.compactSummary}</strong>
           <ul>{composition.blocks.map((block, index) => <li key={index}>{block.name}</li>)}</ul>
-          <strong>{composition.summary}</strong>
+          {composition.complementCount > 0 && (
+            <p className="demo-complements">
+              {composition.complementsLabel}: <Link to="/secciones#complements">{composition.complementsSummary}</Link>
+            </p>
+          )}
         </div>
         <div className="portfolio-card-bottom"><DemoLink example={example}>{site.showcase.demoCta}</DemoLink></div>
       </div>

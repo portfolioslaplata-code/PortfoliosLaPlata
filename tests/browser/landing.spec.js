@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
-for (const width of [320, 375, 430, 768, 1024, 1440]) {
+for (const width of [320, 375, 430, 768, 800, 801, 900, 1024, 1100, 1440]) {
   test(`base, secciones y ejemplos sin overflow a ${width}px`, async ({ page }) => {
     const errors = [];
     page.on("pageerror", (error) => errors.push(error.message));
@@ -12,8 +12,34 @@ for (const width of [320, 375, 430, 768, 1024, 1440]) {
     await expect(page.locator(".portfolio-card")).toHaveCount(3);
     await expect(page.locator(".portfolio-info h3")).toHaveText(["Editorial", "Minimal", "Profundidad"]);
     await expect(page.locator(".demo-composition > strong")).toHaveText([
-      "5 secciones estándar", "5 secciones estándar", "5 secciones estándar + 3 secciones avanzadas",
+      "5 secciones estándar", "5 secciones estándar", "6 estándar + 2 avanzadas",
     ]);
+    await expect(page.locator('.demo-complements')).toHaveCount(1);
+    await expect(page.locator('[data-example="profundidad"] .demo-complements')).toHaveText("Complemento: CV descargable");
+    await expect(page.locator('.demo-complements a')).toHaveAttribute("href", "/secciones#complements");
+    for (const [id, count] of [["editorial", 5], ["minimal", 5], ["profundidad", 8]]) {
+      await expect(page.locator(`[data-example="${id}"] .demo-composition li`)).toHaveCount(count);
+    }
+    const layout = await page.locator('.portfolio-card').evaluateAll((cards) => cards.map((card) => {
+      const rect = card.getBoundingClientRect();
+      const summary = card.querySelector('.demo-composition strong').getBoundingClientRect();
+      const list = card.querySelector('.demo-composition ul').getBoundingClientRect();
+      return {
+        top: rect.top, height: rect.height,
+        ctaBottom: card.querySelector('.portfolio-card-bottom a').getBoundingClientRect().bottom,
+        summaryBeforeList: summary.bottom <= list.top,
+        contentFits: [...card.querySelectorAll('.demo-composition li, .demo-composition strong, .portfolio-card-bottom a')]
+          .every((el) => { const r = el.getBoundingClientRect(); return r.left >= rect.left && r.right <= rect.right; }),
+      };
+    }));
+    expect(layout.every((card) => card.summaryBeforeList && card.contentFits)).toBe(true);
+    if (width > 800) {
+      for (const card of layout) {
+        expect(card.top).toBeCloseTo(layout[0].top, 0);
+        expect(card.height).toBeCloseTo(layout[0].height, 0);
+        expect(card.ctaBottom).toBeCloseTo(layout[0].ctaBottom, 0);
+      }
+    } else expect(layout[1].top).toBeGreaterThan(layout[0].top + layout[0].height);
     await expect(page.locator(".pricing-base")).toContainText("Portfolio Base");
     await expect(page.locator(".pricing-base .modular-price")).toContainText("130.000");
     await expect(page.locator('[data-section-type="standard"] .modular-price')).toContainText("30.000");
@@ -96,7 +122,9 @@ test("assets locales, demos externas, email fallback y tracking desactivado", as
       await image.evaluate((element) => element.naturalWidth),
     ).toBeGreaterThan(0);
   }
-  for (const link of await page.locator(".portfolio-card a").all()) {
+  const demoLinks = page.locator(".portfolio-preview a, .portfolio-card-bottom a");
+  await expect(demoLinks).toHaveCount(6);
+  for (const link of await demoLinks.all()) {
     await expect(link).toHaveAttribute("target", "_blank");
     await expect(link).toHaveAttribute("rel", "noopener noreferrer");
     await expect(link).toHaveAttribute("href", /^https:\/\/.+\.vercel\.app\/$/);
@@ -113,6 +141,41 @@ test("assets locales, demos externas, email fallback y tracking desactivado", as
   expect(tracking).toEqual([]);
 });
 
+for (const width of [375, 801, 1440]) {
+  test(`CV desde el showcase: teclado, hash, modal e historial a ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/#ejemplos");
+    const cv = page.getByRole("link", { name: "CV descargable", exact: true });
+    await cv.focus();
+    await expect(cv).toBeFocused();
+    expect(await cv.evaluate((el) => {
+      const style = getComputedStyle(el);
+      return el.matches(':focus-visible') && style.outlineStyle !== 'none' && parseFloat(style.outlineWidth) > 0;
+    })).toBe(true);
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/\/secciones#complements$/);
+    const target = page.locator("#complements");
+    await expect(target).toBeFocused();
+    await expect.poll(() => target.evaluate((el) => Math.round(el.getBoundingClientRect().top))).toBeGreaterThanOrEqual(75);
+    await expect.poll(() => target.evaluate((el) => Math.round(el.getBoundingClientRect().top))).toBeLessThanOrEqual(105);
+    const trigger = page.getByRole("button", { name: "Ver detalle: CV descargable", exact: true });
+    await trigger.focus();
+    await page.keyboard.press("Enter");
+    await expect(page.getByRole("dialog", { name: "CV descargable", exact: true })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(trigger).toBeFocused();
+    await expect(page).toHaveURL(/\/secciones#complements$/);
+    await page.goBack();
+    await expect(page).toHaveURL(/\/#ejemplos$/);
+    await expect(page.locator("#ejemplos")).toBeFocused();
+    await page.goForward();
+    await expect(target).toBeFocused();
+    await page.reload();
+    await expect.poll(() => target.evaluate((el) => Math.round(el.getBoundingClientRect().top))).toBeGreaterThanOrEqual(75);
+    await expect.poll(() => target.evaluate((el) => Math.round(el.getBoundingClientRect().top))).toBeLessThanOrEqual(105);
+  });
+}
+
 test("el HTML de producción contiene el contenido y SEO sin JavaScript", async ({
   browser,
 }) => {
@@ -123,6 +186,14 @@ test("el HTML de producción contiene el contenido y SEO sin JavaScript", async 
   const page = await context.newPage();
   await page.goto("http://127.0.0.1:4176/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(page.locator(".demo-composition > strong")).toHaveText([
+    "5 secciones estándar", "5 secciones estándar", "6 estándar + 2 avanzadas",
+  ]);
+  await expect(page.locator(".demo-complements")).toHaveText("Complemento: CV descargable");
+  await page.getByRole("link", { name: "CV descargable", exact: true }).click();
+  await expect(page).toHaveURL(/\/secciones#complements$/);
+  await expect(page.locator("#complements")).toContainText("CV descargable");
+  await page.goBack();
   await expect(page.locator('meta[name="description"]')).toHaveAttribute(
     "content",
     /Portfolios web profesionales/,

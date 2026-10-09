@@ -51,11 +51,14 @@
 .demo-grid .portfolio-info { display: flex; flex-direction: column; flex: 1; padding: 25px; }
 .demo-grid .portfolio-info h3 { font-size: 1.5rem; font-weight: 550; }
 .demo-grid .portfolio-info > p { font-size: .92rem; margin-bottom: 22px; }
-.demo-composition { border-top: 1px solid var(--color-border); padding-top: 20px; margin-top: auto; }
+.demo-composition { border-top: 1px solid var(--color-border); padding-top: 20px; }
 .demo-composition > p { font-size: .73rem; color: var(--color-muted); }
-.demo-composition ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 12px 0 15px; gap: 6px; }
+.demo-composition ul { display: flex; flex-wrap: wrap; list-style: none; padding: 0; margin: 12px 0 0; gap: 6px; }
 .demo-composition li { font-size: .75rem; padding: 5px 8px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 4px; }
-.demo-composition strong { font-weight: 500; font-size: .8rem; color: var(--color-primary); line-height: 1.5; display: block; }
+.demo-composition strong { font-weight: 600; font-size: 1rem; color: var(--color-primary); line-height: 1.5; display: block; margin-top: 8px; }
+.demo-composition .demo-complements { font-size: .8rem; margin-top: 16px; }
+.demo-complements a { color: var(--color-primary); text-decoration: underline; text-underline-offset: 3px; }
+.demo-grid .portfolio-card-bottom { margin-top: auto; padding-top: 24px; }
 .demo-bottom { display: flex; justify-content: space-between; align-items: center; gap: 30px; margin-top: 24px; }
 .demo-bottom p { font-size: .85rem; color: var(--color-muted); max-width: 700px; }
 .demo-bottom .text-link { flex-shrink: 0; }

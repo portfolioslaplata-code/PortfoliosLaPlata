@@ -1,4 +1,4 @@
-import { sectionCategories } from "../data/sections.js";
+import { sectionCategories, complementsCategory } from "../data/sections.js";
 
 export function getExamples(site) {
   return site.portfolioExamples.filter((example) => example.enabled !== false);
@@ -38,6 +38,13 @@ export function getCatalog(site) {
   }));
 }
 
+export function getComplements(site) {
+  return {
+    ...complementsCategory,
+    items: complementsCategory.items.map((item) => ({ ...item, ...site.pricingModel.complements[item.id] })),
+  };
+}
+
 export function getSection(id) {
   for (const category of sectionCategories) {
     const item = category.items.find((section) => section.id === id);
@@ -53,20 +60,46 @@ export function sectionCountLabel(site, type, count) {
 
 // Combined content such as experience + education counts as one demo block.
 export function demoComposition(example, site) {
-  const counts = {};
+  const counts = Object.fromEntries(Object.keys(site.pricingModel.sectionTypes).map((type) => [type, 0]));
+  const sectionIdsSeen = new Set();
   const blocks = example.sections.map(({ sectionIds }) => {
+    if (!Array.isArray(sectionIds) || sectionIds.length === 0)
+      throw new Error(`Invalid section group in demo: ${example.id}`);
     const items = sectionIds.map(getSection);
     const type = items[0]?.type;
     if (!type || items.some((item) => item.type !== type))
       throw new Error(`Invalid section group in demo: ${example.id}`);
-    counts[type] = (counts[type] || 0) + 1;
+    for (const id of sectionIds) {
+      if (sectionIdsSeen.has(id)) throw new Error(`Duplicate section in demo ${example.id}: ${id}`);
+      sectionIdsSeen.add(id);
+    }
+    counts[type] += 1;
     return { name: items.map((item) => item.name).join(" y "), type };
   });
+  const catalog = getComplements(site);
+  const complementIds = example.complements ?? [];
+  if (!Array.isArray(complementIds)) throw new Error(`Invalid complements in demo: ${example.id}`);
+  const complementIdsSeen = new Set();
+  const complements = complementIds.map((id) => {
+    const item = catalog.items.find((complement) => complement.id === id);
+    if (!item) throw new Error(`Unknown complement in demo ${example.id}: ${id}`);
+    if (complementIdsSeen.has(id)) throw new Error(`Duplicate complement in demo ${example.id}: ${id}`);
+    complementIdsSeen.add(id);
+    return item;
+  });
+  const activeTypes = Object.keys(counts).filter((type) => counts[type]);
+  const summary = activeTypes.map((type) => sectionCountLabel(site, type, counts[type])).join(" + ");
   return {
     blocks,
-    summary: Object.keys(site.pricingModel.sectionTypes)
-      .filter((type) => counts[type])
-      .map((type) => sectionCountLabel(site, type, counts[type])).join(" + "),
+    counts,
+    totalSections: blocks.length,
+    summary,
+    // Keep the full summary contract; omit the repeated noun only in mixed card summaries.
+    compactSummary: activeTypes.length > 1 ? summary.replace(/\b(?:sección|secciones) /g, "") : summary,
+    complements,
+    complementCount: complements.length,
+    complementsLabel: complements.length === 1 ? catalog.itemLabel : catalog.label,
+    complementsSummary: complements.map((item) => item.name).join(" + "),
   };
 }
 

@@ -7,7 +7,7 @@ export const routes = [
     seo: {
       title: "Secciones para tu portfolio | Portfolios La Plata",
       description:
-        "Conocé las secciones estándar, avanzadas y personalizadas que podemos combinar para construir tu portfolio profesional.",
+        "Explorá las secciones estándar y avanzadas, los complementos y las opciones de desarrollo a medida para tu portfolio profesional.",
     },
   },
 ];

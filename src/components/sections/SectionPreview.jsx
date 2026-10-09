@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, ArrowUpRight, BadgeCheck, Maximize2, Quote, Sparkles, UserRound } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, BadgeCheck, Download, FileText, Maximize2, Quote, Sparkles, UserRound } from "lucide-react";
 
 function Lines() {
   return <span className="preview-lines"><i /><i /><i /></span>;
@@ -9,10 +9,13 @@ function Art({ index = 0 }) {
 }
 
 // Static, decorative miniatures: no pretend buttons, images or extra libraries.
-export default function SectionPreview({ preview }) {
+export default function SectionPreview({ preview, size = "card" }) {
   const { type, title, labels } = preview;
   let content;
   switch (type) {
+    case "download":
+      content = <div className="preview-download"><div className="preview-document"><FileText size={26} strokeWidth={1.3} /><div><strong>{labels[0]}</strong><small>{labels[1]}</small></div><Lines /></div><div className="preview-download-link"><span>{labels[2]}</span><Download size={18} /></div></div>;
+      break;
     case "about":
       content = <div className="preview-about"><span className="preview-avatar"><UserRound size={38} strokeWidth={1.2} /></span><div><strong>{title}</strong><p>{labels[0]}</p><Lines /><small>{labels[1]}</small></div></div>;
       break;
@@ -59,5 +62,5 @@ export default function SectionPreview({ preview }) {
     default:
       content = <Lines />;
   }
-  return <div className={`section-preview section-preview-${type}`} aria-hidden="true"><div className="preview-window"><div className="preview-window-bar"><span /><span /><span /><i /></div>{type !== "about" && <p className="preview-title">{title}</p>}{content}</div></div>;
+  return <div className={`section-preview section-preview-${type} section-preview-${size}`} aria-hidden="true"><div className="preview-window"><div className="preview-window-bar"><span /><span /><span /><i /></div>{type !== "about" && <p className="preview-title">{title}</p>}{content}</div></div>;
 }

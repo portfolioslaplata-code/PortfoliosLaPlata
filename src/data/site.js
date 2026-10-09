@@ -89,7 +89,7 @@ export const site = {
   "portfolioExamples": [
     {
       "id": "editorial",
-      "description": "Cálido, expresivo y visual. Una base para perfiles creativos que quieren darle protagonismo a su trabajo y su personalidad.",
+      "description": "Cálido, expresivo y visual, con protagonismo de tu identidad y tus proyectos.",
       "url": "https://esencial-sigma.vercel.app/",
       "image": "/images/demos/esencial-01.webp",
       "alt": "Captura del portfolio Editorial, ejemplo de identidad visual y combinación de secciones",
@@ -101,6 +101,7 @@ export const site = {
       "tone": "warm",
       "hero": true,
       "name": "Editorial",
+      "complements": [],
       "sections": [
         {
           "sectionIds": [
@@ -143,6 +144,7 @@ export const site = {
       ],
       "tone": "neutral",
       "name": "Minimal",
+      "complements": [],
       "sections": [
         {
           "sectionIds": [
@@ -174,7 +176,7 @@ export const site = {
     },
     {
       "id": "profundidad",
-      "description": "Conocé una presentación que reúne proyectos con contexto, trayectoria y logros. Una base con más libertad para desarrollar tu perfil.",
+      "description": "Proyectos con contexto, trayectoria y testimonios para contar tu recorrido profesional.",
       "url": "https://profesional-virid.vercel.app/",
       "image": "/images/demos/profesional-01.webp",
       "alt": "Captura del portfolio Profundidad, ejemplo de identidad visual y combinación de secciones",
@@ -185,6 +187,7 @@ export const site = {
       "tone": "neutral",
       "featured": true,
       "name": "Profundidad",
+      "complements": ["download-cv"],
       "sections": [
         {
           "sectionIds": [
@@ -203,7 +206,7 @@ export const site = {
         },
         {
           "sectionIds": [
-            "timeline"
+            "experience"
           ]
         },
         {
@@ -443,6 +446,8 @@ export const site = {
       "standard": {
         "name": "Secciones estándar",
         "label": "Estándar",
+        "itemLabel": "Sección estándar",
+        "detailNote": "Es estándar porque organiza tu contenido en un bloque de nuestra biblioteca, adaptado a tu perfil.",
         "price": 30000,
         "countOne": "{count} sección estándar",
         "countMany": "{count} secciones estándar",
@@ -459,6 +464,8 @@ export const site = {
       "advanced": {
         "name": "Secciones avanzadas",
         "label": "Avanzadas",
+        "itemLabel": "Sección avanzada",
+        "detailNote": "Es avanzada porque necesita mayor desarrollo visual, narrativo o de interacción para mostrar tu trabajo.",
         "price": 65000,
         "countOne": "{count} sección avanzada",
         "countMany": "{count} secciones avanzadas",
@@ -471,6 +478,11 @@ export const site = {
           "testimonials"
         ],
         "linkLabel": "Ver secciones avanzadas"
+      }
+    },
+    "complements": {
+      "download-cv": {
+        "price": 15000
       }
     },
     "custom": {

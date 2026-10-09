@@ -1,12 +1,17 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import { sectionsPage as copy } from "../data/sections";
 import { homeSection } from "../data/routes";
-import { getCatalog, startingPrice } from "../lib/site";
+import { getCatalog, getComplements, startingPrice } from "../lib/site";
 import SectionCategory from "../components/sections/SectionCategory";
 import CustomSectionsCTA from "../components/sections/CustomSectionsCTA";
+import ComplementsCategory from "../components/sections/ComplementsCategory";
+import SectionModal from "../components/sections/SectionModal";
 
 export default function SectionsPage({ site }) {
+  const [selection, setSelection] = useState(null);
+  const complements = getComplements(site);
   return (
     <>
       <section className="catalog-hero container" aria-labelledby="catalog-title">
@@ -16,7 +21,7 @@ export default function SectionsPage({ site }) {
           <p className="catalog-intro">{copy.description}</p>
           <p className="catalog-definition">{copy.definition}</p>
           <nav className="catalog-jumps" aria-label="Tipos de secciones">
-            {Object.entries({ ...site.pricingModel.sectionTypes, custom: site.pricingModel.custom }).map(([id, type]) => (
+            {Object.entries({ ...site.pricingModel.sectionTypes, complements, custom: site.pricingModel.custom }).map(([id, type]) => (
               <Link key={id} to={`/secciones#${id}`}>{type.label}<ArrowDown size={14} aria-hidden="true" /></Link>
             ))}
           </nav>
@@ -39,11 +44,14 @@ export default function SectionsPage({ site }) {
           <strong className="formula-result">{site.pricing.formula.result}</strong>
         </div>
         <p className="catalog-count-note">{site.pricing.contentNote}</p>
+        <p className="catalog-complements-note">{copy.complementsNote}</p>
         <Link className="text-link" to={homeSection("precios")}>{site.pricing.formula.linkLabel}<ArrowRight size={16} aria-hidden="true" /></Link>
       </section>
       <p className="catalog-preview-note container">{copy.previewNote}</p>
-      {getCatalog(site).map((category) => <SectionCategory key={category.id} category={category} site={site} />)}
+      {getCatalog(site).map((category) => <SectionCategory key={category.id} category={category} site={site} onExplore={setSelection} />)}
+      <ComplementsCategory category={complements} site={site} onExplore={setSelection} />
       <CustomSectionsCTA site={site} />
+      {selection && <SectionModal selection={selection} site={site} onDismiss={() => setSelection(null)} />}
     </>
   );
 }

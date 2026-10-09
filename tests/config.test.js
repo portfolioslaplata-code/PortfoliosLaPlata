@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { after, before, test } from "node:test";
 import { createServer } from "vite";
 import { site } from "../src/data/site.js";
-import { contactHref, demoComposition, faqAnswer, getCatalog, getExamples, getSection, instagramHref, pricingExample } from "../src/lib/site.js";
+import { contactHref, demoComposition, faqAnswer, getCatalog, getComplements, getExamples, getSection, instagramHref, pricingExample } from "../src/lib/site.js";
 import { renderSeo } from "../src/lib/seo.js";
 import { sectionCategories } from "../src/data/sections.js";
 
@@ -69,8 +69,34 @@ test("catálogo conserva 18 opciones y toda referencia apunta a una sección vá
   assert.deepEqual(getCatalog(site).map((category) => category.items.length), [10, 8]);
   assert.throws(() => getSection("missing"), /Unknown section/);
   const html = renderApp(site, "/secciones");
-  assert.equal((html.match(/class="section-card"/g) || []).length, 18);
+  assert.equal((html.match(/class="section-card"/g) || []).length, 19);
   assert.ok(!html.includes("Disponible en"));
+});
+
+test("detalles completos y complementos independientes con precio central editable", () => {
+  const config = structuredClone(site);
+  config.pricingModel.complements["download-cv"].price = 19000;
+  const complement = getComplements(config);
+  assert.equal(complement.items.length, 1);
+  assert.equal(complement.items[0].id, "download-cv");
+  assert.equal(complement.items[0].price, 19000);
+  assert.deepEqual(getCatalog(config).map((category) => category.items.length), [10, 8]);
+  for (const category of [...getCatalog(config), complement]) {
+    assert.ok(category.itemLabel);
+    assert.ok(category.detailNote);
+    for (const item of category.items) {
+      assert.ok(item.details.description.length > item.description.length);
+      assert.ok(item.details.includes.length >= 3);
+      assert.ok(item.idealFor && item.preview.type);
+    }
+  }
+  const html = renderApp(config, "/secciones");
+  assert.ok(html.includes("19.000"));
+  assert.ok(!html.includes("15.000"));
+  assert.ok(html.includes('href="/secciones#complements"'));
+  // A complement price change must not add prices to demo cards or change the section budget.
+  assert.equal(renderApp(config), renderApp(site));
+  assert.equal(pricingExample(config).total, pricingExample(site).total);
 });
 
 test("demos por estilo: composición derivada, bloques combinados y visibilidad independiente", () => {
@@ -78,8 +104,31 @@ test("demos por estilo: composición derivada, bloques combinados y visibilidad 
   const compositions = site.portfolioExamples.map((example) => demoComposition(example, site));
   assert.deepEqual(compositions.map((item) => item.blocks.length), [5, 5, 8]);
   assert.equal(compositions[0].summary, "5 secciones estándar");
-  assert.equal(compositions[2].summary, "5 secciones estándar + 3 secciones avanzadas");
+  assert.equal(compositions[1].summary, "5 secciones estándar");
+  assert.equal(compositions[2].summary, "6 secciones estándar + 2 secciones avanzadas");
+  assert.equal(compositions[2].compactSummary, "6 estándar + 2 avanzadas");
+  assert.deepEqual(compositions.map((item) => item.counts), [
+    { standard: 5, advanced: 0 }, { standard: 5, advanced: 0 }, { standard: 6, advanced: 2 },
+  ]);
+  assert.deepEqual(compositions.map((item) => item.totalSections), [5, 5, 8]);
+  assert.deepEqual(compositions.map((item) => item.complementCount), [0, 0, 1]);
+  assert.deepEqual(compositions[2].complements, getComplements(site).items);
+  assert.equal(compositions[2].complements[0].id, "download-cv");
+  assert.equal(compositions[2].complementsSummary, "CV descargable");
+  assert.deepEqual(compositions.slice(0, 2).map((item) => item.complementsSummary), ["", ""]);
   assert.ok(compositions[0].blocks.some((block) => block.name === "Experiencia y Formación"));
+  assert.ok(compositions[1].blocks.some((block) => block.name === "Experiencia y Formación"));
+  const expectedIds = [
+    [["about"], ["projects"], ["services"], ["experience", "education"], ["skills"]],
+    [["about"], ["services"], ["projects"], ["experience", "education"], ["skills"]],
+    [["achievements"], ["case-study"], ["about"], ["experience"], ["education"], ["services"], ["skills"], ["testimonials"]],
+  ];
+  for (const [index, ids] of expectedIds.entries()) {
+    assert.deepEqual(site.portfolioExamples[index].sections.map((block) => block.sectionIds), ids);
+    assert.deepEqual(compositions[index].blocks, ids.map((group) => ({
+      name: group.map((id) => getSection(id).name).join(" y "), type: getSection(group[0]).type,
+    })));
+  }
   const config = structuredClone(site);
   config.portfolioExamples[0].enabled = false;
   config.portfolioExamples[1].name = "Nueva mirada";
@@ -87,6 +136,48 @@ test("demos por estilo: composición derivada, bloques combinados y visibilidad 
   assert.ok(renderApp(config).includes("Nueva mirada"));
   config.portfolioExamples = [];
   assert.doesNotThrow(() => renderApp(config));
+});
+
+test("composición opcional y cantidades derivadas al cambiar bloques y complementos", () => {
+  const example = structuredClone(site.portfolioExamples[2]);
+  for (const complements of [undefined, null, []]) {
+    example.complements = complements;
+    const composition = demoComposition(example, site);
+    assert.equal(composition.totalSections, 8);
+    assert.equal(composition.complementCount, 0);
+    assert.equal(composition.complementsSummary, "");
+    const html = renderApp({ ...site, portfolioExamples: [example] });
+    assert.ok(!html.includes('class="demo-complements"'));
+    assert.ok(!html.includes("0 complementos"));
+  }
+  example.sections = [{ sectionIds: ["experience", "education"] }, { sectionIds: ["case-study"] }];
+  example.complements = ["download-cv"];
+  const composition = demoComposition(example, site);
+  assert.deepEqual(composition.counts, { standard: 1, advanced: 1 });
+  assert.equal(composition.totalSections, 2);
+  assert.equal(composition.compactSummary, "1 estándar + 1 avanzada");
+  assert.equal(composition.complementCount, 1);
+  example.sections = [];
+  assert.equal(demoComposition(example, site).totalSections, 0);
+});
+
+test("composición rechaza IDs inválidos, categorías incompatibles y duplicados", () => {
+  const base = { id: "invalid-demo", sections: [], complements: [] };
+  for (const id of ["missing", "download-cv"]) {
+    assert.throws(() => demoComposition({ ...base, sections: [{ sectionIds: [id] }] }, site), /Unknown section/);
+  }
+  for (const sectionIds of [[], undefined, "about", ["about", "case-study"]]) {
+    assert.throws(() => demoComposition({ ...base, sections: [{ sectionIds }] }, site), /Invalid section group/);
+  }
+  for (const sections of [
+    [{ sectionIds: ["about", "about"] }],
+    [{ sectionIds: ["experience", "education"] }, { sectionIds: ["education"] }],
+  ]) assert.throws(() => demoComposition({ ...base, sections }, site), /Duplicate section/);
+  for (const id of ["missing", "about", "timeline"]) {
+    assert.throws(() => demoComposition({ ...base, complements: [id] }, site), /Unknown complement/);
+  }
+  assert.throws(() => demoComposition({ ...base, complements: ["download-cv", "download-cv"] }, site), /Duplicate complement/);
+  assert.throws(() => demoComposition({ ...base, complements: "download-cv" }, site), /Invalid complements/);
 });
 
 test("ambas rutas carecen de paquetes cerrados, comparativas y enlaces retirados", () => {
