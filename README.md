@@ -75,7 +75,7 @@ Cada bloque de `sections` referencia IDs oficiales del catálogo: `{ sectionIds:
 
 Composición de referencia revisada en los repositorios de las demos:
 - Editorial: Sobre mí, Proyectos, Servicios, Experiencia y Formación en un mismo bloque, Habilidades. **5 estándar**, sin complementos.
-- Minimal: Sobre mí, Servicios, Proyectos, Experiencia y Formación en un mismo bloque, Habilidades. **5 estándar**, sin complementos.
+- Minimal: Sobre mí, Servicios, Logros, Experiencia y Formación en un mismo bloque, Certificaciones, Habilidades. **6 estándar**, sin avanzadas ni complementos.
 - Profundidad: Logros, Mini case study, Sobre mí, Experiencia, Formación, Servicios, Habilidades y Testimonios. **6 estándar + 2 avanzadas = 8 secciones**, más **CV descargable** como complemento independiente. Timeline avanzada sigue disponible en el catálogo, pero no representa la Experiencia de esta demo.
 
 Estos recuentos describen la combinación de ejemplo; no fijan el presupuesto de una implementación diferente.

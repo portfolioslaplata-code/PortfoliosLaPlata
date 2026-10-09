@@ -158,13 +158,18 @@ export const site = {
         },
         {
           "sectionIds": [
-            "projects"
+            "achievements"
           ]
         },
         {
           "sectionIds": [
             "experience",
             "education"
+          ]
+        },
+        {
+          "sectionIds": [
+            "certifications"
           ]
         },
         {

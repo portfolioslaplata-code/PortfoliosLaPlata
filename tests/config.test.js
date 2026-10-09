@@ -102,15 +102,15 @@ test("detalles completos y complementos independientes con precio central editab
 test("demos por estilo: composición derivada, bloques combinados y visibilidad independiente", () => {
   assert.deepEqual(site.portfolioExamples.map((example) => example.name), ["Editorial", "Minimal", "Profundidad"]);
   const compositions = site.portfolioExamples.map((example) => demoComposition(example, site));
-  assert.deepEqual(compositions.map((item) => item.blocks.length), [5, 5, 8]);
+  assert.deepEqual(compositions.map((item) => item.blocks.length), [5, 6, 8]);
   assert.equal(compositions[0].summary, "5 secciones estándar");
-  assert.equal(compositions[1].summary, "5 secciones estándar");
+  assert.equal(compositions[1].summary, "6 secciones estándar");
   assert.equal(compositions[2].summary, "6 secciones estándar + 2 secciones avanzadas");
   assert.equal(compositions[2].compactSummary, "6 estándar + 2 avanzadas");
   assert.deepEqual(compositions.map((item) => item.counts), [
-    { standard: 5, advanced: 0 }, { standard: 5, advanced: 0 }, { standard: 6, advanced: 2 },
+    { standard: 5, advanced: 0 }, { standard: 6, advanced: 0 }, { standard: 6, advanced: 2 },
   ]);
-  assert.deepEqual(compositions.map((item) => item.totalSections), [5, 5, 8]);
+  assert.deepEqual(compositions.map((item) => item.totalSections), [5, 6, 8]);
   assert.deepEqual(compositions.map((item) => item.complementCount), [0, 0, 1]);
   assert.deepEqual(compositions[2].complements, getComplements(site).items);
   assert.equal(compositions[2].complements[0].id, "download-cv");
@@ -120,7 +120,7 @@ test("demos por estilo: composición derivada, bloques combinados y visibilidad 
   assert.ok(compositions[1].blocks.some((block) => block.name === "Experiencia y Formación"));
   const expectedIds = [
     [["about"], ["projects"], ["services"], ["experience", "education"], ["skills"]],
-    [["about"], ["services"], ["projects"], ["experience", "education"], ["skills"]],
+    [["about"], ["services"], ["achievements"], ["experience", "education"], ["certifications"], ["skills"]],
     [["achievements"], ["case-study"], ["about"], ["experience"], ["education"], ["services"], ["skills"], ["testimonials"]],
   ];
   for (const [index, ids] of expectedIds.entries()) {
