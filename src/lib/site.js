@@ -117,22 +117,41 @@ export function pricingExample(site) {
   };
 }
 
+function serviceValues(site) {
+  return {
+    ...site.serviceTerms,
+    balancePercent: 100 - site.serviceTerms.depositPercent,
+    domainSetupPrice: `${priceLabel(site.pricingModel.domainSetup.price, site.pricingModel.currency)} ${site.pricingModel.currency}`,
+  };
+}
+
+// Small shared placeholders for the service copy in Pricing, Process and FAQ.
+export function serviceText(template, site) {
+  const values = serviceValues(site);
+  return template.replace(/\{(\w+)\}/g, (_, key) => {
+    if (!(key in values)) throw new Error(`Unknown service condition: ${key}`);
+    return values[key];
+  });
+}
+
 export function faqAnswer(item, site) {
   if (!item.answerTemplate) return item.answer;
   const model = site.pricingModel;
   const values = {
+    ...serviceValues(site),
     baseName: model.base.name,
     basePrice: startingPrice(site, model.base),
-    baseIncludes: model.base.includes.join("; "),
+    baseIncludes: model.base.includes.map((text) => serviceText(text, site)).join("; "),
     sectionPrices: Object.values(model.sectionTypes).map((type) => `${type.name}: ${startingPrice(site, type, true)}.`).join(" "),
+    complementPrices: getComplements(site).items.map((complement) => `${complement.name}: ${startingPrice(site, complement)}.`).join(" "),
     typeDescriptions: Object.values(model.sectionTypes).map((type) => `${type.name}: ${type.description}`).join(" "),
     customDescription: model.custom.description,
     customQuote: model.customQuote,
     customNote: model.custom.note,
     contentNote: site.pricing.contentNote,
     pricingNote: site.pricing.note,
-    payment: site.pricing.payment,
-    delivery: site.pricing.delivery,
+    payment: serviceText(site.pricing.payment, site),
+    delivery: serviceText(site.pricing.delivery, site),
   };
   return item.answerTemplate.replace(/\{(\w+)\}/g, (_, key) => {
     if (!(key in values)) throw new Error(`Unknown FAQ value: ${key}`);

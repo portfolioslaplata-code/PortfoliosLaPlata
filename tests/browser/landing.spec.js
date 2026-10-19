@@ -62,11 +62,11 @@ for (const width of [320, 375, 430, 768, 800, 801, 900, 1024, 1100, 1440, 1920])
     await expect(page.locator("body")).not.toContainText(/\b(?:Planes|Esencial|Esenciales|Profesional|Personalizado)\b/);
     await expect(page.locator('.comparison, .product-card, input[type="checkbox"]')).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    await page.getByText("¿Cómo se calcula el precio de mi portfolio?", { exact: true }).click();
+    await page.getByText("¿Cuánto cuesta hacer mi portfolio?", { exact: true }).click();
     await expect(page.locator(".faq-list details[open]")).toContainText("130.000");
     await expect(page.locator(".faq-list details[open]")).toContainText("65.000");
     await page.getByText("¿Qué incluye el Portfolio Base?", { exact: true }).click();
-    await expect(page.locator(".faq-list details[open]")).toContainText("Una ronda inicial de ajustes");
+    await expect(page.locator(".faq-list details[open]")).toContainText("2 rondas de revisión antes de la aprobación final");
     await expect(page.locator(".faq-list details[open]")).toHaveCount(1);
     expect(errors).toEqual([]);
     if ([375, 768, 1440].includes(width)) {

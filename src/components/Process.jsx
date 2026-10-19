@@ -1,4 +1,5 @@
 import { SectionHeading } from "./ui";
+import { serviceText } from "../lib/site";
 
 export default function Process({ site }) {
   return (
@@ -12,11 +13,11 @@ export default function Process({ site }) {
                 {String(index + 1).padStart(2, "0")}
               </span>
               <h3>{step.title}</h3>
-              <p>{step.description}</p>
+              <p>{serviceText(step.description, site)}</p>
             </li>
           ))}
         </ol>
-        <p className="process-timing">{site.pricing.delivery}</p>
+        <p className="process-timing">{serviceText(site.pricing.delivery, site)}</p>
       </div>
     </section>
   );

@@ -1,6 +1,6 @@
 import { Check, Plus } from "lucide-react";
 import { ContactButton, MoreLink, SectionHeading } from "./ui";
-import { getSection, priceLabel, pricingExample, startingPrice } from "../lib/site";
+import { getSection, priceLabel, pricingExample, serviceText, startingPrice } from "../lib/site";
 
 function BudgetExample({ site }) {
   const { base, currency } = site.pricingModel;
@@ -44,7 +44,7 @@ export default function Pricing({ site }) {
             <p className="modular-price">{startingPrice(site, base)}</p>
             <p className="base-description">{base.description}</p>
             <h4>{site.pricing.includesLabel}</h4>
-            <ul>{base.includes.map((item) => <li key={item}><Check size={16} aria-hidden="true" /><span>{item}</span></li>)}</ul>
+            <ul>{base.includes.map((item) => <li key={item}><Check size={16} aria-hidden="true" /><span>{serviceText(item, site)}</span></li>)}</ul>
             <p className="base-included-note">{site.pricing.contentNote}</p>
           </article>
           <div className="pricing-additions">
@@ -71,7 +71,12 @@ export default function Pricing({ site }) {
         </div>
         <BudgetExample site={site} />
         <div className="pricing-bottom">
-          <div><p>{site.pricing.note}</p><p>{site.pricing.payment} {site.pricing.hostingNote}</p></div>
+          <div>
+            <p>{site.pricing.note}</p>
+            <p>{serviceText(site.pricing.payment, site)}</p>
+            <p>{serviceText(site.pricing.hostingNote, site)}</p>
+            <p>{serviceText(site.pricing.domainNote, site)}</p>
+          </div>
           <ContactButton site={site}>{site.pricing.cta}</ContactButton>
         </div>
       </div>

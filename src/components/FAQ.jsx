@@ -1,4 +1,5 @@
 import { Plus } from "lucide-react";
+import { Link } from "react-router-dom";
 import { SectionHeading } from "./ui";
 import { contactHref, faqAnswer } from "../lib/site";
 
@@ -18,7 +19,10 @@ export default function FAQ({ site }) {
               {item.question}
               <Plus size={18} aria-hidden="true" />
             </summary>
-            <p>{faqAnswer(item, site)}</p>
+            <p>
+              {faqAnswer(item, site)}
+              {item.link && <> <Link to={item.link.href}>{item.link.label}</Link></>}
+            </p>
           </details>
         ))}
       </div>

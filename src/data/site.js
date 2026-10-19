@@ -229,6 +229,15 @@ export const site = {
       ]
     }
   ],
+  "serviceTerms": {
+    "firstVersionBusinessDays": 5,
+    "prePublicationRounds": 2,
+    "postPublicationRounds": 1,
+    "updateMonths": 6,
+    "hostingMonths": 12,
+    "hostingNoticeDays": 60,
+    "depositPercent": 50
+  },
   "pricing": {
     "eyebrow": "UNA BASE COMÚN. TU PROPIA COMBINACIÓN.",
     "title": "Tu portfolio, sección por sección.",
@@ -240,9 +249,10 @@ export const site = {
     "examplesLabel": "Por ejemplo",
     "contentNote": "Hero, navegación, contacto y footer ya forman parte del Portfolio Base. No se cobran como secciones independientes.",
     "note": "Valores orientativos en pesos argentinos. El presupuesto final depende de la cantidad de contenido, la complejidad y el alcance acordado.",
-    "payment": "50% para comenzar y 50% antes de publicar.",
-    "delivery": "Los tiempos dependen del alcance y de tener disponible todo el material necesario.",
-    "hostingNote": "El registro y la renovación del dominio se abonan aparte. Cualquier costo recurrente se detalla en la propuesta.",
+    "payment": "{depositPercent}% al aceptar el presupuesto para comenzar y {balancePercent}% después de aprobar la versión final, antes de la publicación definitiva.",
+    "delivery": "Primera versión: objetivo de {firstVersionBusinessDays} días hábiles para proyectos habituales, desde la aceptación del presupuesto, el anticipo y la entrega de los materiales necesarios. Para proyectos más complejos acordamos otro plazo.",
+    "hostingNote": "Incluye {hostingMonths} meses de alojamiento gestionado desde la publicación definitiva, sin mensualidad obligatoria durante ese período. La continuidad se acuerda antes del vencimiento, sin cargos automáticos.",
+    "domainNote": "Dominio opcional: configuración estándar por {domainSetupPrice}, por única vez. Lo comprás a tu nombre y abonás su registro y renovación aparte.",
     "cta": "Conversemos sobre tu portfolio",
     "example": {
       "eyebrow": "UN EJEMPLO ORIENTATIVO",
@@ -268,15 +278,15 @@ export const site = {
   "process": [
     {
       "title": "Nos contás sobre vos",
-      "description": "Entendemos tu perfil, tus objetivos y qué querés mostrar."
+      "description": "En una conversación o reunión virtual conocemos tu perfil, tus objetivos y los materiales disponibles. Trabajamos online, estés donde estés."
     },
     {
       "title": "Elegimos las secciones",
-      "description": "Definimos los bloques que necesita tu portfolio y acordamos el alcance y el presupuesto."
+      "description": "Definimos los bloques, el alcance y el presupuesto. Al aceptarlo, abonás el {depositPercent}% para comenzar."
     },
     {
       "title": "Reunimos tu contenido",
-      "description": "Nos compartís tu CV, fotos, proyectos, textos y links. Te ayudamos a ordenarlos."
+      "description": "Nos compartís tu CV, información, fotos e imágenes para galerías. Te ayudamos a ordenar y mejorar los textos a partir de tu información."
     },
     {
       "title": "Lo diseñamos",
@@ -284,7 +294,7 @@ export const site = {
     },
     {
       "title": "Revisamos y publicamos",
-      "description": "Aplicamos la ronda inicial de ajustes incluida en la base y lo dejamos online. Los cambios adicionales se acuerdan según su alcance."
+      "description": "Te presentamos la primera versión y realizamos las {prePublicationRounds} rondas incluidas. Cuando aprobás el resultado y abonás el saldo, publicamos y te entregamos el enlace definitivo."
     }
   ],
   "faqIntro": {
@@ -296,68 +306,59 @@ export const site = {
   "faq": [
     {
       "id": "precio",
-      "question": "¿Cómo se calcula el precio de mi portfolio?",
-      "answerTemplate": "El presupuesto parte del {baseName} ({basePrice}) y suma las secciones que necesitás. {sectionPrices} Las necesidades particulares se evalúan a medida. {pricingNote}"
+      "question": "¿Cuánto cuesta hacer mi portfolio?",
+      "answerTemplate": "Partimos del {baseName} ({basePrice}) y sumamos las secciones y complementos que contratás. {sectionPrices} {complementPrices} Si necesitás algo fuera de la biblioteca, lo presupuestamos a medida. {pricingNote}"
     },
     {
       "id": "base",
       "question": "¿Qué incluye el Portfolio Base?",
-      "answerTemplate": "{baseIncludes}. {contentNote}"
+      "answerTemplate": "Incluye {baseIncludes}. {contentNote}"
     },
     {
       "id": "secciones",
-      "question": "¿Qué cuenta como una sección?",
-      "answerTemplate": "Un bloque de contenido con un propósito, como Sobre mí, Experiencia, Formación, Proyectos o Servicios. {contentNote}"
+      "question": "¿Cómo elegimos las secciones de mi portfolio?",
+      "answer": "Las definimos juntos en una conversación o reunión virtual: conocemos tu perfil, tus objetivos y el material disponible para acordar el alcance y el presupuesto. Podemos combinar secciones estándar, avanzadas, complementos y desarrollo a medida, sin una combinación obligatoria. No necesitás conocimientos técnicos: nos ocupamos del diseño, desarrollo y publicación.",
+      "link": { "href": "/secciones", "label": "Explorá las secciones disponibles." }
     },
     {
-      "id": "tipos",
-      "question": "¿Qué diferencia hay entre una sección estándar y una avanzada?",
-      "answerTemplate": "{typeDescriptions}"
+      "id": "universitario",
+      "question": "¿Puedo tener un portfolio si recién estoy empezando?",
+      "answer": "Sí. Trabajamos con estudiantes, personas que están dando sus primeros pasos, freelancers y profesionales con trayectoria. Partimos de lo que tenés: formación, habilidades, servicios o proyectos personales. No necesitás grandes trabajos ni experiencia previa para comenzar."
     },
     {
-      "id": "combinar",
-      "question": "¿Puedo combinar secciones estándar y avanzadas?",
-      "answer": "Sí. Elegimos las que ayuden a contar tu historia, sin una combinación obligatoria ni un límite fijo de secciones. Podés empezar con lo que necesitás y sumar contenido más adelante, acordando el nuevo alcance."
-    },
-    {
-      "id": "a-medida",
-      "question": "¿Qué pasa si necesito algo que no aparece en la biblioteca?",
-      "answerTemplate": "{customDescription} {customQuote}. {customNote}"
+      "id": "material",
+      "question": "¿Qué materiales necesito? ¿Me ayudan con los textos?",
+      "answer": "Compartinos tu CV y la información disponible sobre experiencia, formación, proyectos, servicios, enlaces y redes. No necesitás tener los textos listos: te ayudamos a ordenar el contenido, mejorar la redacción y desarrollar descripciones a partir de lo que nos contás. No inventamos antecedentes, experiencias, certificaciones ni resultados. Las fotografías y recursos propios que quieras usar, incluidas las imágenes de galerías, los aportás vos."
     },
     {
       "id": "identidad",
       "question": "¿Todos los portfolios quedan iguales?",
-      "answer": "No. Adaptamos colores, fotografías, contenido, jerarquía e identidad general a tu perfil. Las demos muestran distintas formas de combinar secciones: son referencias, no plantillas rígidas."
-    },
-    {
-      "id": "universitario",
-      "question": "¿Necesito ser universitario o tener experiencia?",
-      "answer": "No. Podés estar estudiando, dar tus primeros pasos, trabajar como freelance o tener una carrera consolidada. Partimos de lo que ya tenés: formación, proyectos, servicios, trabajos o experiencia."
-    },
-    {
-      "id": "material",
-      "question": "¿Qué tengo que enviar para comenzar?",
-      "answer": "Tu CV o información profesional, fotografías, proyectos, trabajos y redes. Revisamos el material disponible y te orientamos sobre qué conviene incluir. No necesitás tener todo perfectamente organizado."
-    },
-    {
-      "id": "actualizar",
-      "question": "¿Puedo actualizar mi portfolio después?",
-      "answer": "Sí. Podemos sumar proyectos, cambiar textos o actualizar tu experiencia. Las actualizaciones posteriores se presupuestan según el trabajo necesario; no incluyen un editor autogestionable salvo que se acuerde expresamente."
+      "answer": "No. Adaptamos colores, fotografías, contenido y presentación visual a tu perfil. Las secciones que contratás también definen el resultado. Las demos son referencias para imaginarlo, no plantillas rígidas."
     },
     {
       "id": "pago",
-      "question": "¿Cómo se paga y cuánto tarda?",
-      "answerTemplate": "{payment} {delivery}"
+      "question": "¿Cuánto demora y cómo se paga?",
+      "answerTemplate": "{delivery} Abonás el {payment} Ese plazo corresponde a la primera versión: la revisión, aprobación y publicación definitiva vienen después."
     },
     {
-      "id": "ubicacion",
-      "question": "¿Trabajan solamente con personas de La Plata?",
-      "answer": "No. Nacimos en La Plata, pero trabajamos de forma online con personas de cualquier lugar. Podemos conversar y avanzar con tu portfolio a distancia."
+      "id": "actualizar",
+      "question": "¿Puedo pedir cambios antes y después de publicar?",
+      "answerTemplate": "Sí. Incluimos {prePublicationRounds} rondas de revisión antes de la aprobación final y {postPublicationRounds} ronda adicional de actualización durante los primeros {updateMonths} meses desde la publicación. Cada ronda puede reunir varias observaciones: textos, información, imágenes, enlaces o detalles visuales dentro de las secciones contratadas. La ronda posterior es para ajustes menores; las revisiones previas no la consumen. Nuevas secciones, funcionalidades, rediseños o cambios sustanciales se presupuestan aparte, al igual que las actualizaciones posteriores a usar esa ronda o vencer el plazo. Los errores de nuestro desarrollo se corrigen sin consumir rondas."
+    },
+    {
+      "id": "alojamiento",
+      "question": "¿Tengo que pagar una mensualidad para mantener mi portfolio?",
+      "answerTemplate": "No hay mensualidad obligatoria durante los primeros {hostingMonths} meses desde la publicación definitiva: el alojamiento gestionado está incluido. No necesitás crear cuentas de GitHub ni Vercel para contratar. Antes del vencimiento te informaremos las opciones de continuidad y procuraremos avisarte con al menos {hostingNoticeDays} días de anticipación. Las condiciones se acuerdan en ese momento, sin cargos automáticos ni garantía de alojamiento gratuito de por vida. También podés optar por una alternativa independiente."
     },
     {
       "id": "dominio",
-      "question": "¿Puedo usar mi propio dominio?",
-      "answer": "Sí. Conversamos su configuración y acordamos las condiciones de publicación antes de empezar. El registro y la renovación del dominio se abonan aparte; cualquier costo recurrente se detalla en la propuesta."
+      "question": "¿Puedo usar un dominio personalizado?",
+      "answerTemplate": "Sí, es opcional. Lo comprás a tu nombre y te encargás del registro y las renovaciones. La configuración estándar cuesta {domainSetupPrice}, por única vez y aparte de la compra o renovación del dominio. No es una mensualidad ni necesitás comprar un dominio para contratar. Coordinamos los registros y el procedimiento de configuración sin pedirte contraseñas personales."
+    },
+    {
+      "id": "entrega",
+      "question": "¿Qué recibo al finalizar? ¿Puedo llevarme el proyecto?",
+      "answer": "Recibís tu portfolio publicado, el enlace definitivo y el dominio configurado si contrataste ese servicio. Administramos inicialmente el código y el alojamiento. Una vez aprobado y pagado por completo, podés pedir la transferencia gratuita del repositorio a tu cuenta de GitHub para seguir con otro proveedor. Eso no traslada automáticamente el alojamiento ni otras cuentas: una migración técnica se coordina aparte y cualquier costo se informa antes. Tus materiales siguen siendo tuyos o de sus titulares; la transferencia no otorga exclusividad sobre nuestras bases y componentes reutilizables. Las condiciones detalladas de propiedad y licencias se acuerdan por separado."
     }
   ],
   "finalCta": {
@@ -402,15 +403,13 @@ export const site = {
       "tagline": "Todo portfolio empieza acá.",
       "description": "El espacio que sostiene tu contenido. Nos ocupamos de la estructura, tu identidad y la puesta online para que puedas compartirlo con un solo link.",
       "includes": [
-        "Hero / presentación inicial",
-        "Navegación",
-        "Contacto y footer",
-        "Adaptación para celular, tablet y computadora",
-        "Adaptación de colores, fotografías, jerarquía e identidad visual",
-        "Carga y configuración inicial de contenido",
-        "SEO técnico básico",
-        "Publicación",
-        "Una ronda inicial de ajustes"
+        "Hero / presentación, navegación, contacto y footer",
+        "Diseño responsive y adaptación visual a tu identidad",
+        "Carga y organización inicial del contenido",
+        "SEO técnico básico y publicación",
+        "{prePublicationRounds} rondas de revisión antes de la aprobación final",
+        "{hostingMonths} meses de alojamiento gestionado desde la publicación",
+        "{postPublicationRounds} ronda de actualización durante los primeros {updateMonths} meses desde la publicación"
       ]
     },
     "sectionTypes": {
@@ -450,6 +449,9 @@ export const site = {
         ],
         "linkLabel": "Ver secciones avanzadas"
       }
+    },
+    "domainSetup": {
+      "price": 10000
     },
     "complements": {
       "download-cv": {

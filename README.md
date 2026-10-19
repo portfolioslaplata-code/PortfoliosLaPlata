@@ -22,7 +22,9 @@ Si Chrome no está instalado, instalar Chromium con `npx playwright install chro
 | Base, importe e incluidos | `src/data/site.js → pricingModel.base` |
 | Moneda y etiquetas de precio | `pricingModel.currency, startingAt, perSection, customQuote` |
 | Nombres, descripciones, precios y ejemplos de cada tipo | `pricingModel.sectionTypes.standard / advanced` |
-| Precio provisional del CV descargable | `src/data/site.js → pricingModel.complements["download-cv"].price` |
+| Precio del CV descargable | `src/data/site.js → pricingModel.complements["download-cv"].price` |
+| Configuración opcional de dominio (servicio, no complemento) | `pricingModel.domainSetup.price` |
+| Plazos, rondas, alojamiento, aviso de continuidad y anticipo | `serviceTerms` |
 | Desarrollo a medida, ejemplos y condiciones | `pricingModel.custom` |
 | Copy de Precios, notas y combinación orientativa | `pricing` |
 | Demos, nombres, URLs, imágenes y composición | `portfolioExamples` |
@@ -32,9 +34,17 @@ Si Chrome no está instalado, instalar Chromium con `npx playwright install chro
 | Registro de rutas y metadata por página | `src/data/routes.js` |
 | Paleta de marca | `src/data/theme.js` |
 
-Los importes solo se definen en `pricingModel`. Home, catálogo, FAQ y JSON-LD los consumen desde allí. Todos se presentan como valores iniciales: el presupuesto final depende del contenido, la complejidad y el alcance. La moneda es configurable.
+Los importes solo se definen en `pricingModel`. Home, catálogo, FAQ y JSON-LD consumen los valores que les corresponden desde allí. Base, secciones y CV se presentan como valores iniciales: el presupuesto final depende del contenido, la complejidad y el alcance. La configuración estándar de dominio tiene un importe independiente por única vez. La moneda es configurable.
 
-Portfolio Base incluye Hero/presentación, navegación, contacto/footer, responsive, adaptación de identidad, carga inicial, SEO técnico básico, publicación y una ronda inicial de ajustes. Hero y contacto/footer no se cobran como secciones independientes.
+Portfolio Base incluye Hero/presentación, navegación, contacto/footer, responsive, adaptación de identidad, carga y organización inicial, SEO técnico básico y publicación, más dos rondas de revisión antes de aprobar, 12 meses de alojamiento gestionado y una ronda posterior de ajustes menores dentro de seis meses desde la publicación. Hero y contacto/footer no se cobran como secciones independientes.
+
+El proceso comienza con una conversación/reunión virtual y presupuesto. Se abona 50% al aceptarlo y 50% después de aprobar la versión final, antes de publicar. El objetivo para proyectos habituales es presentar la primera versión en cinco días hábiles desde presupuesto aceptado, anticipo recibido y materiales necesarios entregados; no equivale a publicación definitiva y los alcances complejos llevan otro plazo acordado. El cliente aporta información, fotografías e imágenes para galerías; ayudamos a ordenar y redactar a partir de esa información, sin inventar antecedentes ni resultados.
+
+Las rondas pueden agrupar varias observaciones dentro de las secciones contratadas. Nuevas secciones, funciones, rediseños y cambios sustanciales se cotizan aparte. Las revisiones previas no consumen la ronda posterior; una vez usada o vencido el plazo, se cotizan las actualizaciones. Los errores propios de desarrollo no consumen rondas.
+
+El alojamiento incluido se cuenta desde la publicación definitiva, sin mensualidad obligatoria por 12 meses. Antes del vencimiento se acuerda la continuidad, procurando avisar al menos 60 días antes; no hay cargos automáticos, tarifa de renovación definida ni promesa de gratuidad perpetua. Se puede elegir una alternativa independiente. El dominio es opcional, comprado a nombre del cliente y registrado/renovado a su cargo. Su configuración estándar cuesta $10.000 ARS por única vez, aparte del dominio, mediante registros y un procedimiento acordado sin pedir contraseñas personales.
+
+Se entrega el portfolio publicado, su URL definitiva y el dominio configurado si se contrató. No se requieren cuentas de GitHub/Vercel para contratar: administramos inicialmente código y publicación. Tras aprobación y pago total, el repositorio se puede transferir gratuitamente a GitHub del cliente. Eso no transfiere automáticamente el alojamiento ni otras cuentas; cualquier migración se coordina aparte, informando costos previamente. Los materiales siguen siendo del cliente o sus titulares; nuestras bases y componentes reutilizables no se vuelven exclusivos. Las condiciones detalladas de propiedad y licencias se definirán en documentación contractual separada.
 
 Las secciones estándar adaptan contenido y presentación de la biblioteca. Las avanzadas ofrecen mayor profundidad visual, narrativa o interacción. Se pueden combinar libremente. El trabajo fuera de la biblioteca se evalúa y cotiza individualmente; los ejemplos de funcionalidades no son promesas de inclusión.
 
@@ -63,7 +73,7 @@ Se conservan exactamente 10 secciones estándar y 8 avanzadas. Cada entrada tien
 
 `SectionModal` recibe la entrada, su categoría y el botón que la abrió. Usa `<dialog>.showModal()` para impedir la interacción con el fondo y contener la navegación por teclado. El foco inicia en Cerrar; Escape y el botón cierran el modal. Al cerrar se restauran los estilos del body, la posición de scroll y el foco en la card de origen. En móvil es un panel casi completo con encabezado fijo y contenido desplazable. Las animaciones y el hover respetan `prefers-reduced-motion`. Las previews son HTML/CSS decorativo, reutilizadas con `size="card"` y `size="modal"`.
 
-`complementsCategory` mantiene los extras separados del recuento de secciones. Su lista admite nuevas entradas, pero por ahora solo contiene CV descargable, presentado en una card horizontal (vertical en móvil). `getComplements(site)` combina su contenido con los precios independientes de `pricingModel.complements`, por ID. El precio inicial de CV es **provisional: $15.000 ARS**, mostrado como «Desde» y editable únicamente en `pricingModel.complements["download-cv"].price`. Los complementos usan el mismo modal y forman parte de la composición comercial mostrada en las demos, pero no incrementan el número de secciones ni alteran el ejemplo de precio. El catálogo no agrega carrito, selección ni compra.
+`complementsCategory` mantiene los extras separados del recuento de secciones. Su lista admite nuevas entradas, pero por ahora solo contiene CV descargable, presentado en una card horizontal (vertical en móvil). `getComplements(site)` combina su contenido con los precios independientes de `pricingModel.complements`, por ID. El precio inicial de CV es **$15.000 ARS**, mostrado como «Desde» y editable únicamente en `pricingModel.complements["download-cv"].price`. Los complementos usan el mismo modal y forman parte de la composición comercial mostrada en las demos, pero no incrementan el número de secciones ni alteran el ejemplo de precio. La configuración de dominio es un servicio independiente, no un complemento ni una sección; no altera el catálogo, el ejemplo de presupuesto o el JSON-LD. El catálogo no agrega carrito, selección ni compra.
 
 ## Demos y composición
 
@@ -111,7 +121,9 @@ Home usa Service + Organization + OfferCatalog con la base, los tipos de secció
 
 ## FAQ, contacto e identidad
 
-Las FAQ se editan en `site.faq`. Pueden tener `answer` o `answerTemplate`; los marcadores se resuelven en faqAnswer desde la configuración compartida. Incluidos, precios, condiciones y descripciones no se duplican en respuestas fijas. Los acordeones funcionan también sin JavaScript.
+Las once FAQ se editan en `site.faq`. Pueden tener `answer` o `answerTemplate` y un enlace contextual opcional (`link.href`, `link.label`). `faqAnswer()` resuelve precios e incluidos; `serviceText()` comparte los marcadores de `serviceTerms` y el precio de dominio con Precios y Proceso. `balancePercent` se calcula como 100 menos `depositPercent`. `base.includes`, `pricing.payment/delivery/hostingNote/domainNote` y `process[].description` admiten esos marcadores; un marcador desconocido produce un error para evitar publicar textos incompletos. No duplicar importes ni cantidades en JSX.
+
+El acordeón conserva `<details name="faq">` y `<summary>`, teclado, foco y funcionamiento sin JavaScript. La expansión/contracción usa `::details-content`, `interpolate-size` y transición de `content-visibility` con `allow-discrete`, limitada por `@supports` y `prefers-reduced-motion: no-preference`. Si falta soporte o se pide movimiento reducido, permanece la apertura/cierre nativa sin animación de contenido. No hay temporizadores ni estado React para el cierre.
 
 `contact.message` es el mensaje general usado por todos los CTA. Un número internacional válido en `contact.whatsapp` abre WhatsApp; vacío o inválido usa `contact.email` y `emailSubject`. Instagram se muestra solo con una URL HTTPS válida del servicio. No se envían mensajes automáticamente.
 
@@ -121,7 +133,7 @@ La paleta central sigue en theme.js. Los tokens CSS, el favicon y theme-color se
 
 GA4 sigue desactivado. Para activarlo deliberadamente: copiar .env.example a .env.local, definir VITE_GA_MEASUREMENT_ID, activar `analytics.enabled` y reconstruir. Ambas condiciones son necesarias. Definir proveedor, titularidad, privacidad y consentimiento aplicable antes de habilitarlo.
 
-Publicación estática: comando `npm run build`, directorio `dist`. Los cambios de esta iteración son locales; no se despliega automáticamente. Registro/renovación de dominio y costos recurrentes se acuerdan en la propuesta.
+Publicación estática: comando `npm run build`, directorio `dist`. Los cambios de esta iteración son locales; no se despliega automáticamente. Registro y renovación del dominio son responsabilidad del cliente; el alojamiento gestionado inicial y su continuidad siguen las condiciones documentadas arriba.
 
 ## Validación
 
@@ -129,4 +141,4 @@ Las pruebas cubren importes configurables, incluidos de base, ejemplo calculado,
 
 Playwright revisa home y catálogo en 320, 375, 430, 768, 900, 1024 y 1440 px, más el showcase en 800, 801 y 1100 px; overflow, jerarquía del resumen, chips, alineación de CTA, enlaces, teclado, menú móvil, FAQ, hashes, historial, recargas y HTML sin JavaScript. Cubre el enlace del CV desde Home al catálogo y su modal existente. Incluye axe WCAG A/AA. Las capturas quedan en test-results/, fuera de Git.
 
-La decisión comercial compartida está en `../Productos/producto-docs/catalogo.md`. Los repositorios de las demos conservan su implementación y sus nombres históricos.
+Las condiciones operativas compartidas están en `../AGENTS.md` (fuera de los repositorios Git); la configuración vigente está en `src/data/site.js`. `../Productos/producto-docs/catalogo.md` es una referencia compartida que debe contrastarse con esa configuración. Los repositorios de las demos conservan su implementación y sus nombres históricos.

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { after, before, test } from "node:test";
 import { createServer } from "vite";
 import { site } from "../src/data/site.js";
-import { contactHref, demoComposition, faqAnswer, getCatalog, getComplements, getExamples, getSection, instagramHref, pricingExample } from "../src/lib/site.js";
+import { contactHref, demoComposition, faqAnswer, getCatalog, getComplements, getExamples, getSection, instagramHref, pricingExample, serviceText } from "../src/lib/site.js";
 import { renderSeo } from "../src/lib/seo.js";
 import { sectionCategories } from "../src/data/sections.js";
 
@@ -54,7 +54,7 @@ test("incluidos, tipos y FAQ se actualizan desde una única definición", () => 
     assert.ok(html.includes("Descripción central de prueba."));
   }
   assert.ok(faqAnswer(config.faq.find((item) => item.id === "base"), config).includes("Incluido de prueba"));
-  assert.ok(faqAnswer(config.faq.find((item) => item.id === "tipos"), config).includes("Descripción central de prueba."));
+  assert.ok(faqAnswer(config.faq.find((item) => item.id === "precio"), config).includes("Secciones de prueba"));
   assert.equal(site.products, undefined);
   assert.equal(site.comparison, undefined);
   assert.equal(site.sectionTypes, undefined);
@@ -94,8 +94,9 @@ test("detalles completos y complementos independientes con precio central editab
   assert.ok(html.includes("19.000"));
   assert.ok(!html.includes("15.000"));
   assert.ok(html.includes('href="/secciones#complements"'));
-  // A complement price change must not add prices to demo cards or change the section budget.
-  assert.equal(renderApp(config), renderApp(site));
+  // FAQ now explains complement prices; demo composition and the section budget stay independent.
+  assert.ok(faqAnswer(config.faq.find((item) => item.id === "precio"), config).includes("19.000"));
+  assert.deepEqual(config.portfolioExamples.map((example) => demoComposition(example, config).compactSummary), site.portfolioExamples.map((example) => demoComposition(example, site).compactSummary));
   assert.equal(pricingExample(config).total, pricingExample(site).total);
 });
 
@@ -227,9 +228,64 @@ test("las reglas comerciales de base, complejidad y pago llegan a las FAQ", () =
   config.pricing.contentNote = "Regla de base actualizada.";
   config.pricing.note = "Alcance variable actualizado.";
   config.pricing.payment = "Forma de pago de prueba.";
-  for (const [id, value] of [["secciones", config.pricing.contentNote], ["precio", config.pricing.note], ["pago", config.pricing.payment]]) {
+  for (const [id, value] of [["base", config.pricing.contentNote], ["precio", config.pricing.note], ["pago", config.pricing.payment]]) {
     assert.ok(faqAnswer(config.faq.find((item) => item.id === id), config).includes(value));
   }
   config.pricing.example.sectionCounts = { missing: 2 };
   assert.throws(() => pricingExample(config), /Invalid pricing example/);
+});
+
+test("FAQ cubre las condiciones aprobadas sin duplicados ni marcadores pendientes", () => {
+  assert.equal(site.faq.length, 11);
+  assert.equal(new Set(site.faq.map((item) => item.id)).size, site.faq.length);
+  assert.equal(new Set(site.faq.map((item) => item.question)).size, site.faq.length);
+  for (const item of site.faq) {
+    const answer = faqAnswer(item, site);
+    assert.ok(answer.length > 40);
+    assert.doesNotMatch(answer, /\{\w+\}|Una ronda inicial|cambios ilimitados/);
+  }
+  const answer = (id) => faqAnswer(site.faq.find((item) => item.id === id), site);
+  assert.match(answer("actualizar"), /2 rondas de revisión.*1 ronda adicional.*6 meses/);
+  assert.match(answer("actualizar"), /varias observaciones/);
+  assert.match(answer("actualizar"), /errores de nuestro desarrollo se corrigen sin consumir rondas/);
+  assert.match(answer("pago"), /5 días hábiles.*presupuesto.*anticipo.*materiales/);
+  assert.match(answer("pago"), /50% después de aprobar.*antes de la publicación/);
+  assert.match(answer("alojamiento"), /12 meses desde la publicación definitiva/);
+  assert.match(answer("alojamiento"), /al menos 60 días/);
+  assert.match(answer("alojamiento"), /sin cargos automáticos ni garantía/);
+  assert.match(answer("dominio"), /10\.000 ARS.*por única vez/);
+  assert.match(answer("dominio"), /sin pedirte contraseñas personales/);
+  assert.match(answer("entrega"), /aprobado y pagado por completo.*transferencia gratuita/);
+  assert.match(answer("entrega"), /no traslada automáticamente el alojamiento/);
+  assert.match(answer("material"), /No inventamos/);
+  assert.equal(site.pricingModel.complements["download-cv"].price, 15000);
+  assert.equal(site.pricingModel.domainSetup.price, 10000);
+  assert.throws(() => serviceText("{unknown}", site), /Unknown service condition/);
+  assert.throws(() => faqAnswer({ answerTemplate: "{unknown}" }, site), /Unknown FAQ value/);
+});
+
+test("cambiar dominio o condiciones centrales actualiza FAQ, Precios y Proceso sin afectar catálogo", () => {
+  const config = structuredClone(site);
+  config.pricingModel.domainSetup.price = 18000;
+  Object.assign(config.serviceTerms, {
+    firstVersionBusinessDays: 8, prePublicationRounds: 3,
+    updateMonths: 9, hostingMonths: 18, hostingNoticeDays: 75, depositPercent: 40,
+  });
+  const html = renderApp(config);
+  const pricing = html.match(/<section id="precios"[\s\S]*?<\/section>/)[0];
+  const process = html.match(/<section id="proceso"[\s\S]*?<\/section>/)[0];
+  const faq = html.match(/<section id="preguntas"[\s\S]*?<\/section>/)[0];
+  for (const content of [pricing, faq]) {
+    for (const text of ["18.000", "3 rondas", "9 meses", "18 meses", "40%", "60%"])
+      assert.ok(content.includes(text), text);
+    assert.ok(!content.includes("10.000"));
+  }
+  for (const text of ["8 días hábiles", "3 rondas", "40%"])
+    assert.ok(process.includes(text), text);
+  assert.ok(faq.includes("75 días"));
+  assert.equal(renderApp(config, "/secciones"), renderApp(site, "/secciones"));
+  assert.equal(renderSeo(config), renderSeo(site));
+  assert.equal(pricingExample(config).total, 220000);
+  assert.deepEqual(getComplements(config).items.map((item) => item.id), ["download-cv"]);
+  assert.doesNotMatch(html, /\{(?:firstVersionBusinessDays|prePublicationRounds|updateMonths|hostingMonths|depositPercent|domainSetupPrice)\}/);
 });
