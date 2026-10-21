@@ -129,11 +129,14 @@
 .preview-quote svg { color: var(--color-primary); }
 .preview-quote strong { font: 500 1.04rem/1.45 var(--font-display); letter-spacing: -.03em; }
 .preview-quote span { font-size: .6rem; color: var(--color-muted); }
-.preview-comparison { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
-.preview-comparison .preview-art { height: 125px; }
-.preview-comparison > div:first-child .preview-art { filter: grayscale(1); }
-.preview-comparison > div > span:last-child { display: block; text-align: center; font-size: .6rem; margin-top: 7px; }
-.preview-divider { position: absolute; top: 43px; left: calc(50% - 16px); width: 32px; height: 32px; display: grid; place-items: center; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 50%; font-style: normal; }
+.preview-comparison { position: relative; height: 140px; border-radius: 3px; overflow: hidden; }
+.preview-comparison-before, .preview-comparison-after { position: absolute; inset: 0; }
+.preview-comparison .preview-art { height: 100%; border-radius: 0; }
+.preview-comparison-before .preview-art { filter: grayscale(1); }
+.preview-comparison-after { clip-path: inset(0 0 0 50%); }
+.preview-comparison-labels { position: absolute; inset: auto 8px 8px; display: flex; justify-content: space-between; gap: 8px; }
+.preview-comparison-labels span { padding: 4px 7px; border-radius: 2px; background: var(--color-surface); font-size: .6rem; }
+.preview-divider { position: absolute; inset: 0 auto 0 50%; width: 2px; background: var(--color-surface); box-shadow: 0 0 0 1px var(--color-border); }
 
 @media (min-width: 801px) and (max-width: 1050px) {
   .site-header .navbar { gap: 18px; }
@@ -251,8 +254,8 @@
 .section-preview-modal .preview-lightbox .preview-art { height: 130px; }
 .section-preview-modal .preview-timeline { gap: 22px; }
 .section-preview-modal .preview-timeline > div { font-size: .72rem; gap: 10px; }
-.section-preview-modal .preview-comparison .preview-art { height: 170px; }
-.section-preview-modal .preview-divider { top: 70px; }
+.section-preview-modal .preview-comparison { height: 170px; }
+.section-preview-modal .preview-comparison .preview-art { height: 100%; }
 .section-preview-modal .preview-document strong { font-size: .78rem; }
 .section-preview-modal .preview-download-link { font-size: .85rem; }
 @keyframes section-modal-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }

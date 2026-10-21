@@ -216,6 +216,24 @@ export const sectionCategories = [
             "6|colaboraciones"
           ]
         }
+      },
+      {
+        "id": "testimonials",
+        "name": "Testimonios",
+        "description": "Recomendaciones profesionales o comentarios de clientes que cuentan cómo fue trabajar con vos.",
+        "idealFor": "La experiencia de quienes te eligen",
+        "details": {
+          "description": "Sumá la mirada de quienes trabajaron con vos. Presentamos recomendaciones con su contexto para que otras personas puedan imaginar cómo sería compartir un proyecto.",
+          "includes": ["Citas de clientes o colegas", "Nombre y rol de quien recomienda", "Proyecto o vínculo profesional", "Fotografía opcional con autorización"]
+        },
+        "preview": {
+          "type": "quote",
+          "title": "Lo que dicen del trabajo",
+          "labels": [
+            "“Entendió la idea y la llevó mucho más lejos.”",
+            "Cliente de ejemplo · Proyecto de identidad"
+          ]
+        }
       }
     ]
   },
@@ -334,35 +352,17 @@ export const sectionCategories = [
         }
       },
       {
-        "id": "testimonials",
-        "name": "Testimonios",
-        "description": "Recomendaciones profesionales o comentarios de clientes que cuentan cómo fue trabajar con vos.",
-        "idealFor": "La experiencia de quienes te eligen",
-        "details": {
-          "description": "Sumá la mirada de quienes trabajaron con vos. Presentamos recomendaciones con su contexto para que otras personas puedan imaginar cómo sería compartir un proyecto.",
-          "includes": ["Citas de clientes o colegas", "Nombre y rol de quien recomienda", "Proyecto o vínculo profesional", "Fotografía opcional con autorización"]
-        },
-        "preview": {
-          "type": "quote",
-          "title": "Lo que dicen del trabajo",
-          "labels": [
-            "“Entendió la idea y la llevó mucho más lejos.”",
-            "Cliente de ejemplo · Proyecto de identidad"
-          ]
-        }
-      },
-      {
         "id": "before-after",
         "name": "Comparativa / Before & After",
-        "description": "Dos momentos de un mismo trabajo para mostrar con claridad qué cambió y cuál fue tu aporte.",
-        "idealFor": "Arquitectura, diseño, fotografía, marketing, entrenamiento o reformas",
+        "description": "Un comparador interactivo con un divisor deslizable que revela el antes y el después de tu trabajo sobre una misma vista.",
+        "idealFor": "Reformas arquitectónicas, restauraciones, retoque fotográfico, rediseño visual y transformaciones de espacios",
         "details": {
-          "description": "Hacé visible una transformación. Ponemos en relación el punto de partida y el resultado, con el contexto necesario para entender qué cambió gracias a tu trabajo.",
-          "includes": ["Imágenes del antes y el después", "Presentación comparativa", "Descripción de la intervención", "Resultados o cambios destacados"]
+          "description": "Mostrá qué cambió gracias a tu trabajo. Quien visite tu portfolio podrá deslizar un divisor para revelar progresivamente una imagen sobre la otra y comparar el antes y el después a su ritmo. Acompañamos la transformación con una explicación breve de la intervención y su resultado. El comparador se adapta a celular y computadora y se puede usar con mouse, pantallas táctiles y teclado.",
+          "includes": ["Dos imágenes comparables del antes y el después", "Divisor deslizable para revelar una imagen sobre la otra", "Interacción con mouse, pantallas táctiles y teclado", "Identificación clara de ambos estados", "Breve explicación del trabajo y su resultado", "Diseño responsive y accesibilidad"]
         },
         "preview": {
           "type": "comparison",
-          "title": "Una nueva perspectiva",
+          "title": "Una transformación, en la misma vista",
           "labels": [
             "Antes",
             "Después"

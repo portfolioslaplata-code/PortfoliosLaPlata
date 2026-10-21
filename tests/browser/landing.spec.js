@@ -21,7 +21,7 @@ for (const width of [320, 375, 430, 768, 800, 801, 900, 1024, 1100, 1440, 1920])
     await expect(page.locator(".portfolio-card")).toHaveCount(3);
     await expect(page.locator(".portfolio-info h3")).toHaveText(["Editorial", "Minimal", "Profundidad"]);
     await expect(page.locator(".demo-composition > strong")).toHaveText([
-      "5 secciones estándar", "6 secciones estándar", "6 estándar + 2 avanzadas",
+      "5 secciones estándar", "6 secciones estándar", "7 estándar + 1 avanzada",
     ]);
     await expect(page.locator('.demo-complements')).toHaveCount(1);
     await expect(page.locator('[data-example="profundidad"] .demo-complements')).toHaveText("Complemento: CV descargable");
@@ -202,7 +202,7 @@ test("el HTML de producción contiene el contenido y SEO sin JavaScript", async 
   await page.goto("http://127.0.0.1:4176/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(page.locator(".demo-composition > strong")).toHaveText([
-    "5 secciones estándar", "6 secciones estándar", "6 estándar + 2 avanzadas",
+    "5 secciones estándar", "6 secciones estándar", "7 estándar + 1 avanzada",
   ]);
   await expect(page.locator(".demo-complements")).toHaveText("Complemento: CV descargable");
   await page.getByRole("link", { name: "CV descargable", exact: true }).click();

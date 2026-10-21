@@ -445,7 +445,7 @@ export const site = {
           "slider",
           "case-study",
           "expanded-gallery",
-          "testimonials"
+          "before-after"
         ],
         "linkLabel": "Ver secciones avanzadas"
       }

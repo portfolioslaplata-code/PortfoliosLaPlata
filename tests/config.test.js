@@ -78,9 +78,12 @@ test("catálogo conserva 18 opciones y toda referencia apunta a una sección vá
   const ids = sectionCategories.flatMap((category) => category.items.map((item) => item.id));
   assert.equal(ids.length, 18);
   assert.equal(new Set(ids).size, ids.length);
-  for (const type of Object.values(site.pricingModel.sectionTypes))
-    for (const id of type.exampleIds) assert.ok(getSection(id));
-  assert.deepEqual(getCatalog(site).map((category) => category.items.length), [10, 8]);
+  for (const [type, definition] of Object.entries(site.pricingModel.sectionTypes))
+    for (const id of definition.exampleIds) assert.equal(getSection(id).type, type);
+  assert.deepEqual(getCatalog(site).map((category) => category.items.length), [11, 7]);
+  assert.equal(getSection("testimonials").type, "standard");
+  assert.equal(getSection("testimonials").price, undefined);
+  assert.equal(getSection("before-after").type, "advanced");
   assert.throws(() => getSection("missing"), /Unknown section/);
   const html = renderApp(site, "/secciones");
   assert.equal((html.match(/class="section-card"/g) || []).length, 19);
@@ -94,7 +97,7 @@ test("detalles completos y complementos independientes con precio central editab
   assert.equal(complement.items.length, 1);
   assert.equal(complement.items[0].id, "download-cv");
   assert.equal(complement.items[0].price, 19000);
-  assert.deepEqual(getCatalog(config).map((category) => category.items.length), [10, 8]);
+  assert.deepEqual(getCatalog(config).map((category) => category.items.length), [11, 7]);
   for (const category of [...getCatalog(config), complement]) {
     assert.ok(category.itemLabel);
     assert.ok(category.detailNote);
@@ -120,10 +123,10 @@ test("demos por estilo: composición derivada, bloques combinados y visibilidad 
   assert.deepEqual(compositions.map((item) => item.blocks.length), [5, 6, 8]);
   assert.equal(compositions[0].summary, "5 secciones estándar");
   assert.equal(compositions[1].summary, "6 secciones estándar");
-  assert.equal(compositions[2].summary, "6 secciones estándar + 2 secciones avanzadas");
-  assert.equal(compositions[2].compactSummary, "6 estándar + 2 avanzadas");
+  assert.equal(compositions[2].summary, "7 secciones estándar + 1 sección avanzada");
+  assert.equal(compositions[2].compactSummary, "7 estándar + 1 avanzada");
   assert.deepEqual(compositions.map((item) => item.counts), [
-    { standard: 5, advanced: 0 }, { standard: 6, advanced: 0 }, { standard: 6, advanced: 2 },
+    { standard: 5, advanced: 0 }, { standard: 6, advanced: 0 }, { standard: 7, advanced: 1 },
   ]);
   assert.deepEqual(compositions.map((item) => item.totalSections), [5, 6, 8]);
   assert.deepEqual(compositions.map((item) => item.complementCount), [0, 0, 1]);

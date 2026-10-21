@@ -16,8 +16,18 @@ for (const width of [320, 375, 430, 768, 900, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/secciones");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Elegí qué querés mostrar.");
-    await expect(page.locator("#standard .section-card")).toHaveCount(10);
-    await expect(page.locator("#advanced .section-card")).toHaveCount(8);
+    await expect(page.locator("#standard .section-card")).toHaveCount(11);
+    await expect(page.locator("#advanced .section-card")).toHaveCount(7);
+    await expect(page.locator("#standard").getByRole("heading", { name: "Testimonios", exact: true })).toBeVisible();
+    await expect(page.locator("#advanced").getByRole("heading", { name: "Testimonios", exact: true })).toHaveCount(0);
+    const quotePreview = page.locator(".section-preview-quote");
+    expect(await quotePreview.evaluate((element) => {
+      const bounds = element.getBoundingClientRect();
+      return [...element.querySelector(".preview-quote").children].every((child) => {
+        const rect = child.getBoundingClientRect();
+        return rect.bottom <= bounds.bottom && rect.left >= bounds.left && rect.right <= bounds.right;
+      });
+    })).toBe(true);
     await expect(page.locator("#standard .catalog-category-price")).toContainText(/Desde \$\s*20\.000 ARS por sección/);
     await expect(page.locator("#advanced .catalog-category-price")).toContainText(/Desde \$\s*40\.000 ARS por sección/);
     await expect(page.locator(".catalog-formula")).toContainText(/Desde \$\s*80\.000 ARS/);
@@ -50,6 +60,8 @@ for (const width of [320, 375, 430, 768, 900, 1024, 1440]) {
       await page.locator(".catalog-formula").screenshot({ path: `test-results/sections-formula-${width}.png` });
       await page.locator("#standard .catalog-category-heading").screenshot({ path: `test-results/sections-price-${width}.png` });
       await page.locator("#advanced .section-card").first().screenshot({ path: `test-results/sections-preview-${width}.png` });
+      await page.locator("#standard .section-card").filter({ has: page.getByRole("heading", { name: "Testimonios", exact: true }) }).screenshot({ path: `test-results/testimonials-card-${width}.png`, style: ".site-header, .skip-link { visibility: hidden !important; }" });
+      await page.locator("#advanced .section-card").filter({ has: page.getByRole("heading", { name: "Comparativa / Before & After", exact: true }) }).screenshot({ path: `test-results/before-after-card-${width}.png`, style: ".site-header, .skip-link { visibility: hidden !important; }" });
     }
     expect(errors).toEqual([]);
   });
@@ -147,6 +159,12 @@ test("las 19 opciones abren contenido propio y precio del modelo comercial", asy
       await expect(modal).toContainText(item.idealFor);
       await expect(modal.locator(".section-modal-price strong")).toHaveText(startingPrice(site, item.price == null ? category : item));
       await expect(modal.locator(".section-preview-modal")).toHaveCount(1);
+      if (item.id === "before-after") {
+        const preview = modal.locator(".section-preview-comparison");
+        await expect(preview).toHaveAttribute("aria-hidden", "true");
+        await expect(preview.locator("input, button, [role='slider'], [tabindex]")).toHaveCount(0);
+        await expect(preview.locator(".preview-comparison-labels span")).toHaveText(["Antes", "Después"]);
+      }
       await modal.getByRole("button", { name: "Cerrar", exact: true }).click();
       await expect(modal).toHaveCount(0);
       await expect(trigger).toBeFocused();
@@ -190,7 +208,7 @@ for (const width of [320, 375, 430, 768, 1440]) {
   test(`modal responsive, teclado, scroll y accesibilidad a ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 740 });
     await page.goto("/secciones");
-    for (const name of ["Sobre mí", "Mini case study", "CV descargable"]) {
+    for (const name of ["Sobre mí", "Testimonios", "Comparativa / Before & After", "Mini case study", "CV descargable"]) {
       const trigger = page.getByRole("button", { name: `Ver detalle: ${name}`, exact: true });
       await trigger.click();
       const modal = page.getByRole("dialog", { name, exact: true });
@@ -211,7 +229,7 @@ for (const width of [320, 375, 430, 768, 1440]) {
         const audit = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
         expect(audit.violations).toEqual([]);
         await modal.getByRole("region").evaluate((el) => { el.scrollTop = 0; });
-        await page.screenshot({ path: `test-results/modal-${name.replaceAll(" ", "-")}-${width}.png` });
+        await page.screenshot({ path: `test-results/modal-${name.replaceAll(" ", "-").replaceAll("/", "-")}-${width}.png` });
       }
       await modal.getByRole("button", { name: "Cerrar" }).click();
       await expect(trigger).toBeFocused();

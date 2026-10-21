@@ -69,7 +69,9 @@ Se retiraron el array de productos comerciales, los límites por paquete, la com
 
 ## Explorar el catálogo
 
-Se conservan exactamente 10 secciones estándar y 8 avanzadas. Cada entrada tiene `details.description` y `details.includes`, además de `idealFor` y `preview`. Las cards mantienen un botón «Ver detalle» con área de interacción extendida a toda la tarjeta; funcionan con clic, tap, Enter y Space. El hover usa un desplazamiento de 3 px, borde y sombra suaves, solo en dispositivos con hover preciso.
+El catálogo contiene 11 secciones estándar y 7 avanzadas. Testimonios pertenece a estándar y hereda su precio orientativo desde `pricingModel.sectionTypes.standard`, sin un importe propio. Cada entrada tiene `details.description` y `details.includes`, además de `idealFor` y `preview`. Las cards mantienen un botón «Ver detalle» con área de interacción extendida a toda la tarjeta; funcionan con clic, tap, Enter y Space. El hover usa un desplazamiento de 3 px, borde y sombra suaves, solo en dispositivos con hover preciso.
+
+Before & After sigue siendo avanzada: ofrece un comparador con dos imágenes superpuestas y un divisor deslizable, compatible con mouse, tacto y teclado, etiquetas claras, contexto del trabajo, responsive y accesibilidad. Su preview en el catálogo es una ilustración estática con división central y etiquetas Antes/Después, sin un control funcional; el comparador se implementaría en el portfolio contratado.
 
 `SectionModal` recibe la entrada, su categoría y el botón que la abrió. Usa `<dialog>.showModal()` para impedir la interacción con el fondo y contener la navegación por teclado. El foco inicia en Cerrar; Escape y el botón cierran el modal. Al cerrar se restauran los estilos del body, la posición de scroll y el foco en la card de origen. En móvil es un panel casi completo con encabezado fijo y contenido desplazable. Las animaciones y el hover respetan `prefers-reduced-motion`. Las previews son HTML/CSS decorativo, reutilizadas con `size="card"` y `size="modal"`.
 
@@ -86,7 +88,7 @@ Cada bloque de `sections` referencia IDs oficiales del catálogo: `{ sectionIds:
 Composición de referencia revisada en los repositorios de las demos:
 - Editorial: Sobre mí, Proyectos, Servicios, Experiencia y Formación en un mismo bloque, Habilidades. **5 estándar**, sin complementos.
 - Minimal: Sobre mí, Servicios, Logros, Experiencia y Formación en un mismo bloque, Certificaciones, Habilidades. **6 estándar**, sin avanzadas ni complementos.
-- Profundidad: Logros, Mini case study, Sobre mí, Experiencia, Formación, Servicios, Habilidades y Testimonios. **6 estándar + 2 avanzadas = 8 secciones**, más **CV descargable** como complemento independiente. Timeline avanzada sigue disponible en el catálogo, pero no representa la Experiencia de esta demo.
+- Profundidad: Logros, Mini case study, Sobre mí, Experiencia, Formación, Servicios, Habilidades y Testimonios. **7 estándar + 1 avanzada = 8 secciones**, más **CV descargable** como complemento independiente. Testimonios es estándar; Mini case study es avanzada. Timeline avanzada sigue disponible en el catálogo, pero no representa la Experiencia de esta demo.
 
 Estos recuentos describen la combinación de ejemplo; no fijan el presupuesto de una implementación diferente.
 

@@ -57,7 +57,7 @@ export default function SectionPreview({ preview, size = "card" }) {
       content = <div className="preview-quote"><Quote size={26} /><strong>{labels[0]}</strong><span>{labels[1]}</span></div>;
       break;
     case "comparison":
-      content = <div className="preview-comparison">{labels.map((label, i) => <div key={label}><Art index={i} /><span>{label}</span></div>)}<i className="preview-divider">↔</i></div>;
+      content = <div className="preview-comparison"><div className="preview-comparison-before"><Art /></div><div className="preview-comparison-after"><Art /></div><div className="preview-comparison-labels">{labels.map((label) => <span key={label}>{label}</span>)}</div><i className="preview-divider" /></div>;
       break;
     default:
       content = <Lines />;
