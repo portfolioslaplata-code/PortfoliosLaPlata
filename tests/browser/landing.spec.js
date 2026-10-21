@@ -53,18 +53,21 @@ for (const width of [320, 375, 430, 768, 800, 801, 900, 1024, 1100, 1440, 1920])
       }
     } else expect(layout[1].top).toBeGreaterThan(layout[0].top + layout[0].height);
     await expect(page.locator(".pricing-base")).toContainText("Portfolio Base");
-    await expect(page.locator(".pricing-base .modular-price")).toContainText("130.000");
-    await expect(page.locator('[data-section-type="standard"] .modular-price')).toContainText("30.000");
-    await expect(page.locator('[data-section-type="advanced"] .modular-price')).toContainText("65.000");
-    await expect(page.locator(".budget-total")).toContainText("220.000");
+    await expect(page.locator(".pricing-base .modular-price")).toHaveText(/^Desde \$\s*80\.000 ARS$/);
+    await expect(page.locator('[data-section-type="standard"] .modular-price')).toHaveText(/^Desde \$\s*20\.000 ARS por sección$/);
+    await expect(page.locator('[data-section-type="advanced"] .modular-price')).toHaveText(/^Desde \$\s*40\.000 ARS por sección$/);
+    await expect(page.locator(".budget-total")).toContainText("140.000");
+    await expect(page.locator(".budget-example")).toContainText("no un paquete cerrado");
+    await expect(page.locator("body")).not.toContainText(/(?:130|30|65|15)\.000/);
     await expect(page.locator(".budget-example")).toContainText("3 secciones estándar");
     await expect(page.locator(".base-included-note")).toContainText("No se cobran como secciones independientes");
     await expect(page.locator("body")).not.toContainText(/\b(?:Planes|Esencial|Esenciales|Profesional|Personalizado)\b/);
     await expect(page.locator('.comparison, .product-card, input[type="checkbox"]')).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await page.getByText("¿Cuánto cuesta hacer mi portfolio?", { exact: true }).click();
-    await expect(page.locator(".faq-list details[open]")).toContainText("130.000");
-    await expect(page.locator(".faq-list details[open]")).toContainText("65.000");
+    await expect(page.locator(".faq-list details[open]")).toContainText("80.000");
+    await expect(page.locator(".faq-list details[open]")).toContainText("40.000");
+    await expect(page.locator(".faq-list details[open]")).toContainText(/CV descargable: Desde \$\s*10\.000 ARS/);
     await page.getByText("¿Qué incluye el Portfolio Base?", { exact: true }).click();
     await expect(page.locator(".faq-list details[open]")).toContainText("2 rondas de revisión antes de la aprobación final");
     await expect(page.locator(".faq-list details[open]")).toHaveCount(1);

@@ -240,12 +240,12 @@ export const site = {
   },
   "pricing": {
     "eyebrow": "UNA BASE COMÚN. TU PROPIA COMBINACIÓN.",
-    "title": "Tu portfolio, sección por sección.",
-    "description": "Empezamos con una base. Después elegimos juntos las secciones que necesitás para mostrar tu perfil, tu trabajo y tu recorrido.",
+    "title": "Tu portfolio, a tu manera.",
+    "description": "Empezá con una base profesional y sumá las secciones que mejor representen tu perfil. Elegís qué mostrar según tus objetivos y tu presupuesto, sin paquetes cerrados.",
     "baseLabel": "EL PUNTO DE PARTIDA",
     "includesLabel": "Siempre incluido",
-    "additionsTitle": "Sumá lo que necesitás mostrar.",
-    "additionsNote": "Podés combinar secciones estándar y avanzadas. No necesitás usar ambas: tu contenido define la combinación.",
+    "additionsTitle": "Elegí las secciones que necesitás.",
+    "additionsNote": "Las secciones dan forma a tu portfolio. Podés elegir solo estándar o combinarlas con avanzadas: tu contenido define la combinación.",
     "examplesLabel": "Por ejemplo",
     "contentNote": "Hero, navegación, contacto y footer ya forman parte del Portfolio Base. No se cobran como secciones independientes.",
     "note": "Valores orientativos en pesos argentinos. El presupuesto final depende de la cantidad de contenido, la complejidad y el alcance acordado.",
@@ -256,12 +256,12 @@ export const site = {
     "cta": "Conversemos sobre tu portfolio",
     "example": {
       "eyebrow": "UN EJEMPLO ORIENTATIVO",
-      "title": "Así se forma un presupuesto.",
+      "title": "Una combinación posible para tu portfolio.",
       "sectionCounts": {
         "standard": 3
       },
       "totalLabel": "Precio estimado desde",
-      "note": "Es una combinación de ejemplo. Podés agregar, quitar o cambiar secciones; definimos el alcance y el presupuesto final juntos."
+      "note": "Es un ejemplo, no un paquete cerrado. Podés agregar, quitar o cambiar secciones; acordamos el presupuesto final según tu contenido y el alcance."
     },
     "formula": {
       "title": "Cómo se arma tu portfolio",
@@ -396,12 +396,12 @@ export const site = {
     "currency": "ARS",
     "startingAt": "Desde",
     "perSection": "por sección",
-    "customQuote": "Cotización personalizada",
+    "customQuote": "A presupuestar",
     "base": {
       "name": "Portfolio Base",
-      "price": 130000,
+      "price": 80000,
       "tagline": "Todo portfolio empieza acá.",
-      "description": "El espacio que sostiene tu contenido. Nos ocupamos de la estructura, tu identidad y la puesta online para que puedas compartirlo con un solo link.",
+      "description": "La presentación inicial, la estructura y la puesta online de tu portfolio. A esta base le sumamos las secciones de contenido que elijas, con sus precios por separado.",
       "includes": [
         "Hero / presentación, navegación, contacto y footer",
         "Diseño responsive y adaptación visual a tu identidad",
@@ -418,7 +418,7 @@ export const site = {
         "label": "Estándar",
         "itemLabel": "Sección estándar",
         "detailNote": "Es estándar porque organiza tu contenido en un bloque de nuestra biblioteca, adaptado a tu perfil.",
-        "price": 30000,
+        "price": 20000,
         "countOne": "{count} sección estándar",
         "countMany": "{count} secciones estándar",
         "headline": "Un lugar para cada parte de tu historia.",
@@ -436,7 +436,7 @@ export const site = {
         "label": "Avanzadas",
         "itemLabel": "Sección avanzada",
         "detailNote": "Es avanzada porque necesita mayor desarrollo visual, narrativo o de interacción para mostrar tu trabajo.",
-        "price": 65000,
+        "price": 40000,
         "countOne": "{count} sección avanzada",
         "countMany": "{count} secciones avanzadas",
         "headline": "Más formas de contar tu trabajo.",
@@ -455,7 +455,7 @@ export const site = {
     },
     "complements": {
       "download-cv": {
-        "price": 15000
+        "price": 10000
       }
     },
     "custom": {

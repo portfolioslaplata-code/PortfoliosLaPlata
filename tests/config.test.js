@@ -20,12 +20,26 @@ function schema(config, path = "/") {
 }
 
 test("base y secciones: precios mínimos y ejemplo orientativo, sin total duplicado", () => {
-  assert.equal(site.pricingModel.base.price, 130000);
-  assert.equal(site.pricingModel.sectionTypes.standard.price, 30000);
-  assert.equal(site.pricingModel.sectionTypes.advanced.price, 65000);
-  assert.equal(pricingExample(site).total, 220000);
+  assert.equal(site.pricingModel.base.price, 80000);
+  assert.equal(site.pricingModel.sectionTypes.standard.price, 20000);
+  assert.equal(site.pricingModel.sectionTypes.advanced.price, 40000);
+  assert.equal(pricingExample(site).total, 140000);
   assert.equal(site.pricing.example.total, undefined);
   const config = structuredClone(site);
+  for (const [sectionCounts, total] of [
+    [{ standard: 2 }, 120000],
+    [{ standard: 3 }, 140000],
+    [{ standard: 3, advanced: 1 }, 180000],
+  ]) {
+    config.pricing.example.sectionCounts = sectionCounts;
+    assert.equal(pricingExample(config).total, total);
+  }
+  for (const path of ["/", "/secciones"]) {
+    const html = renderApp(site, path);
+    assert.doesNotMatch(html, /(?:130|30|65|15)\.000/);
+    for (const price of ["80.000", "20.000", "40.000", "10.000"]) assert.ok(html.includes(price));
+  }
+  assert.deepEqual(schema(site).hasOfferCatalog.itemListElement.slice(0, 3).map((item) => item.priceSpecification.minPrice), [80000, 20000, 40000]);
   config.pricingModel.base.price = 145000;
   config.pricingModel.sectionTypes.standard.price = 41000;
   config.pricingModel.sectionTypes.advanced.price = 79000;
@@ -92,7 +106,7 @@ test("detalles completos y complementos independientes con precio central editab
   }
   const html = renderApp(config, "/secciones");
   assert.ok(html.includes("19.000"));
-  assert.ok(!html.includes("15.000"));
+  assert.ok(!html.includes("10.000"));
   assert.ok(html.includes('href="/secciones#complements"'));
   // FAQ now explains complement prices; demo composition and the section budget stay independent.
   assert.ok(faqAnswer(config.faq.find((item) => item.id === "precio"), config).includes("19.000"));
@@ -258,7 +272,7 @@ test("FAQ cubre las condiciones aprobadas sin duplicados ni marcadores pendiente
   assert.match(answer("entrega"), /aprobado y pagado por completo.*transferencia gratuita/);
   assert.match(answer("entrega"), /no traslada automáticamente el alojamiento/);
   assert.match(answer("material"), /No inventamos/);
-  assert.equal(site.pricingModel.complements["download-cv"].price, 15000);
+  assert.equal(site.pricingModel.complements["download-cv"].price, 10000);
   assert.equal(site.pricingModel.domainSetup.price, 10000);
   assert.throws(() => serviceText("{unknown}", site), /Unknown service condition/);
   assert.throws(() => faqAnswer({ answerTemplate: "{unknown}" }, site), /Unknown FAQ value/);
@@ -278,14 +292,14 @@ test("cambiar dominio o condiciones centrales actualiza FAQ, Precios y Proceso s
   for (const content of [pricing, faq]) {
     for (const text of ["18.000", "3 rondas", "9 meses", "18 meses", "40%", "60%"])
       assert.ok(content.includes(text), text);
-    assert.ok(!content.includes("10.000"));
+    assert.doesNotMatch(content, /configuración estándar (?:por|cuesta) \$\s*10\.000/);
   }
   for (const text of ["8 días hábiles", "3 rondas", "40%"])
     assert.ok(process.includes(text), text);
   assert.ok(faq.includes("75 días"));
   assert.equal(renderApp(config, "/secciones"), renderApp(site, "/secciones"));
   assert.equal(renderSeo(config), renderSeo(site));
-  assert.equal(pricingExample(config).total, 220000);
+  assert.equal(pricingExample(config).total, 140000);
   assert.deepEqual(getComplements(config).items.map((item) => item.id), ["download-cv"]);
   assert.doesNotMatch(html, /\{(?:firstVersionBusinessDays|prePublicationRounds|updateMonths|hostingMonths|depositPercent|domainSetupPrice)\}/);
 });
